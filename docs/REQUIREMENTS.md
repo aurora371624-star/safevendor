@@ -9,7 +9,7 @@
 | R2 architecture, roles, mechanism rationale, flows | Report Section 2, architecture diagram, sale and treasury flows | Complete |
 | R3 working features, novelty, readable code, events/access control, gas awareness | Contracts, 17 tests, events, modifiers, immutable values, bounded loops | Complete |
 | R4 vulnerability scan and threat mitigations | `docs/slither-output.txt`, `docs/SECURITY.md`, report Section 4 | Complete |
-| R5 Sepolia deployment, verified contracts, scripts, ops stance | Current deployment includes the project owner; Etherscan source verification is pending | In progress |
+| R5 Sepolia deployment, verified contracts, scripts, ops stance | Three Etherscan-verified contracts; current deployment includes the project owner | Complete |
 | R6 GitHub/README, citations, licensing | Public GitHub repository, README, `LICENSE`, `docs/REFERENCES.md`, AI disclosure | Complete; group metadata still needs personalization |
 | R7 presentation structure, visuals, participation, Q&A | 12-minute PPT with four speaking roles and Q&A prep | Complete after member names are assigned |
 

@@ -8,8 +8,13 @@ const OUT = path.join(ROOT, "outputs");
 const WORK = path.join(ROOT, "work", "slides");
 const PREVIEW = path.join(WORK, "previews");
 const FINAL = path.join(OUT, "SafeVendor_Presentation_v4.pptx");
-const SKILL_DIR =
-  "/Users/furina/.codex/plugins/cache/openai-primary-runtime/presentations/26.1110.11613/skills/presentations";
+const SKILL_DIR = process.env.PRESENTATION_SKILL_DIR;
+if (!SKILL_DIR) {
+  throw new Error("PRESENTATION_SKILL_DIR must point to the presentations skill");
+}
+if (!process.env.PRESENTATION_PYTHON) {
+  throw new Error("PRESENTATION_PYTHON must point to the bundled Python executable");
+}
 
 await fs.mkdir(OUT, { recursive: true });
 await fs.mkdir(PREVIEW, { recursive: true });
@@ -245,13 +250,13 @@ const presentation = Presentation.create({
     bold: true,
     color: C.amberPale,
   });
-  text(slide, "Group Name and ID", 64, 594, 420, 28, {
+  text(slide, "SafeVendor Group", 64, 594, 420, 28, {
     fontSize: 17,
     bold: true,
     color: C.paper,
   });
-  text(slide, "Members: add final presenter names", 64, 624, 520, 24, {
-    fontSize: 13,
+  text(slide, "Members: Yang Qingchen, Xu Fang, Wang Zijian, Wu Fei, Chen Qikai", 64, 622, 650, 40, {
+    fontSize: 11,
     color: "#ABB5B0",
   });
   text(slide, "18 November 2026", 1000, 594, 216, 28, {
@@ -263,7 +268,7 @@ const presentation = Presentation.create({
     color: "#ABB5B0",
   });
   slide.speakerNotes.text =
-    "0:00-0:45. Introduce the project and state the central design claim: sale proceeds never enter a seller-controlled account. Add the group name and presenter names before submission.";
+    "0:00-0:45. Introduce the project and state the central design claim: sale proceeds never enter a seller-controlled account. Confirm the final formal group ID before submission.";
 }
 
 // 2. Problem
@@ -726,9 +731,9 @@ const presentation = Presentation.create({
     columnWidths: [220, 320, 160],
     values: [
       ["Contract", "Address", "State"],
-      ["SafeVendorToken", "0x69D7…C4deeA", "Verified"],
-      ["MultiSigTreasury", "0x53C6…19F13d", "Verified"],
-      ["TokenVendor", "0x6030…7d519A", "Verified"]
+      ["SafeVendorToken", "0x734c…8B79B", "Verified"],
+      ["MultiSigTreasury", "0xaCCb…617B4", "Verified"],
+      ["TokenVendor", "0x96fA…74717", "Verified"]
     ]
   });
   styleTable(table, { fontSize: 12.5 });
@@ -769,10 +774,10 @@ const presentation = Presentation.create({
     54,
     { fontSize: 14, color: C.muted }
   );
-  if (await fs.stat(path.join(ROOT, "work/evidence/etherscan-treasury-verified.png")).then(() => true).catch(() => false)) {
+  if (await fs.stat(path.join(ROOT, "docs/evidence/etherscan-treasury-verified.png")).then(() => true).catch(() => false)) {
     await image(
       slide,
-      path.join(ROOT, "work/evidence/etherscan-treasury-verified.png"),
+      path.join(ROOT, "docs/evidence/etherscan-treasury-verified.png"),
       812,
       190,
       404,
@@ -807,53 +812,53 @@ const presentation = Presentation.create({
 {
   const slide = presentation.slides.add();
   slide.background.fill = C.paper;
-  title(slide, "Live demonstration", "The dApp exposes the complete workflow", {
+  title(slide, "Deployed state", "The contract set is live on Sepolia", {
     fontSize: 38,
     width: 1050
   });
-  const screenshot = path.join(ROOT, "work/report/frontend-report.png");
+  const screenshot = path.join(ROOT, "docs/evidence/frontend-desktop.png");
   await image(slide, screenshot, 64, 180, 640, 462, "contain");
   text(slide, "Sepolia state", 758, 190, 260, 28, {
     fontSize: 11,
     bold: true,
     color: C.teal,
   });
-  text(slide, "999,900", 758, 228, 330, 58, {
+  text(slide, "1,000,000", 758, 228, 366, 58, {
     fontSize: 42,
     fontFamily: "Aptos Display",
   });
-  text(slide, "SVT still available", 758, 284, 330, 28, {
+  text(slide, "SVT in Vendor inventory", 758, 284, 366, 28, {
     fontSize: 14,
     color: C.muted,
   });
-  text(slide, "0.009 ETH", 758, 338, 330, 58, {
+  text(slide, "0 ETH", 758, 338, 330, 58, {
     fontSize: 42,
     fontFamily: "Aptos Display",
   });
-  text(slide, "Treasury balance after the demo transfer", 758, 394, 366, 38, {
+  text(slide, "Treasury balance at deployment", 758, 394, 366, 38, {
     fontSize: 14,
     color: C.muted,
   });
-  text(slide, "Proposal #0", 758, 460, 330, 42, {
+  text(slide, "3 / 3", 758, 460, 330, 42, {
     fontSize: 30,
     bold: true,
   });
-  text(slide, "2 / 2 confirmed  /  Executed", 758, 506, 366, 30, {
+  text(slide, "contracts verified on Etherscan", 758, 506, 366, 30, {
     fontSize: 16,
     color: C.teal,
   });
   text(
     slide,
-    "The transaction evidence is real: 0.01 ETH bought 100 SVT, then two owners approved a 0.001 ETH treasury transfer.",
+    "Owner 1 is the project wallet. Owner 2 and Owner 3 complete the fixed 2-of-3 treasury configuration.",
     64,
     632,
     1140,
     32,
     { fontSize: 13, color: C.muted }
   );
-  footer(slide, 9, "Live demo");
+  footer(slide, 9, "Deployed state");
   slide.speakerNotes.text =
-    "10:00-11:30. Switch to the dApp only if the live wallet connection is stable. Otherwise use the screenshot and Etherscan receipts. Walk through purchase, proposal, confirmation, execution, and post-state.";
+    "10:00-11:30. Show the current Sepolia state: full vendor inventory, zero treasury balance, three verified contracts, and the fixed owner set. The buy and treasury actions are available for the live Q&A demonstration.";
 }
 
 // 10. Conclusion
@@ -962,8 +967,7 @@ const result = await finalizePresentation({
   workspaceDir: ROOT,
   candidatePath,
   finalPath: FINAL,
-  pythonExecutable:
-    "/Users/furina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+  pythonExecutable: process.env.PRESENTATION_PYTHON,
   integrityValidatorPath: path.join(
     SKILL_DIR,
     "container_tools/inspect_presentation_package_integrity.py"

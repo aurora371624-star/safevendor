@@ -18,13 +18,13 @@ WORK.mkdir(parents=True, exist_ok=True)
 
 DOCX_PATH = OUTPUT / "SafeVendor_Project_Report.docx"
 ARCH_PATH = WORK / "architecture.png"
-FRONTEND_SHOT = ROOT / "work" / "evidence" / "frontend-desktop.png"
+FRONTEND_SHOT = ROOT / "docs" / "evidence" / "frontend-desktop.png"
 FRONTEND_REPORT_SHOT = WORK / "frontend-report.png"
-ETHERSCAN_SHOT = ROOT / "work" / "evidence" / "etherscan-treasury-verified.png"
+ETHERSCAN_SHOT = ROOT / "docs" / "evidence" / "etherscan-treasury-verified.png"
 
-TOKEN_ADDRESS = "0x69D7f801AA1EB37321B6F7C1843E380c76C4deeA"
-TREASURY_ADDRESS = "0x53C6F389B8773C9C74b275BCb2B55ba4C119F13d"
-VENDOR_ADDRESS = "0x6030d8D8674f96F3e8BF9dCe5AF74b65247d519A"
+TOKEN_ADDRESS = "0x734c0e5a46624Ef79b9bcb6283f9537F3018B79B"
+TREASURY_ADDRESS = "0xaCCb68DE59C32300BB224525E05B90b9f69617B4"
+VENDOR_ADDRESS = "0x96fAbD18cfEC365700b7D95c397b4AdF04274717"
 
 INK = RGBColor(17, 31, 26)
 MUTED = RGBColor(79, 92, 86)
@@ -366,8 +366,8 @@ def add_cover(doc):
 
     metadata = [
         ("Course", "CDS528 Blockchain DeFi Smart Contract Development"),
-        ("Group", "[Group Name and ID]"),
-        ("Members", "[Add all member names]"),
+        ("Group", "SafeVendor Group"),
+        ("Members", "Yang Qingchen, Xu Fang, Wang Zijian, Wu Fei, Chen Qikai"),
         ("Network", "Ethereum Sepolia, chain ID 11155111"),
         ("Submission", "18 November 2026"),
     ]
@@ -819,17 +819,17 @@ def add_section_5(doc):
         "explicitly rather than hidden behind an admin recovery function."
     )
 
-    doc.add_heading("5.4 Live demonstration evidence", level=2)
+    doc.add_heading("5.4 Live deployment evidence", level=2)
     add_table(
         doc,
         ["Event", "Observed result"],
         [
-            ("Buyer purchase", "0.01 ETH paid; 100 SVT received."),
-            ("Settlement", "ETH routed directly to Treasury."),
-            ("Proposal", "Owner 1 submitted and automatically confirmed."),
-            ("Approval", "Owner 2 added the second distinct confirmation."),
-            ("Execution", "0.001 ETH transferred after the threshold was met."),
-            ("Post-state", "Proposal marked executed; Treasury balance 0.009 ETH."),
+            ("Owner 1", "0x758090f1c15a76fFf31C5852e71f68ABCF24FA61"),
+            ("Owner 2", "0xAD8C645384858B50b988BFEbb0c1DB6f996C5A76"),
+            ("Owner 3", "0x50b74325eadd91918d9f4083635d9bB570dC9C56"),
+            ("Threshold", "2 of 3 confirmations required."),
+            ("Vendor inventory", "1,000,000 SVT received at deployment."),
+            ("Source verification", "All three contracts match Etherscan Standard JSON input."),
         ],
         [1.8, 4.7],
         font_size=9.5,
@@ -847,8 +847,8 @@ def add_section_6(doc):
     )
     doc.add_paragraph(
         "The public GitHub URL is on the cover and at the top of the repository README. "
-        "The group must confirm instructor and TA read access and add the true group "
-        "name, group ID, and member names before Moodle submission."
+        "The cover lists the five group members. The final group ID must be confirmed "
+        "before Moodle submission."
     )
 
     doc.add_heading("6.2 Rubric coverage", level=2)
@@ -929,15 +929,14 @@ def add_section_7(doc):
         "three contracts with clear ownership boundaries and no hidden administrator."
     )
     doc.add_paragraph(
-        "The strongest evidence is not a slide claim. It is the live Sepolia state: a "
-        "buyer received 100 SVT for 0.01 ETH, proceeds entered the treasury, two distinct "
-        "owners confirmed a transfer, and the treasury executed only after the threshold "
-        "was met. Etherscan shows the matching source and ABI for all three contracts."
+        "The strongest evidence is the live Sepolia state: the group owner is fixed at "
+        "deployment, the treasury requires a second independent owner, the vendor holds "
+        "the complete token inventory, and Etherscan shows matching source and ABI for "
+        "all three contracts."
     )
     doc.add_paragraph(
-        "Before submission, the group still needs to attach its real public repository "
-        "URL and identity metadata. Those administrative fields do not change the "
-        "technical result, but they are required by D1, D2, R6, and R7."
+        "The public repository is attached on the cover. The remaining administrative "
+        "step is to insert the final formal group ID before Moodle submission."
     )
 
     doc.add_heading("References", level=1)
@@ -975,17 +974,17 @@ def add_section_7(doc):
         (
             "SafeVendorToken",
             TOKEN_ADDRESS,
-            "0x230cc3be5f5ead3886ce1ff5ccdc842cbe4831ce455db8ca9715cca849ab34a7",
+            "0xe2ee577305b2bc4328241fab13fde9d69255d0bf0ae0c9ca64238c6544024fb0",
         ),
         (
             "MultiSigTreasury",
             TREASURY_ADDRESS,
-            "0xa1c8b8abc284f6849720e9973048c1ad111610139ccbfcf161af242291dbad4e",
+            "0x7a3099374ecd0aaea895cd12ba6150fa52bc0369dd0e73d9db14c87a2c4f16c4",
         ),
         (
             "TokenVendor",
             VENDOR_ADDRESS,
-            "0xfdf11edf7d8f415c5635191f043155b69b456644599b438b074d50a11dfa8f7e",
+            "0xa82989eeedf57f3637bfdf4e012da63176561d8da4bec6883a9e4d8d52828f32",
         ),
     ]
     for name, address, tx_hash in records:

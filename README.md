@@ -14,9 +14,9 @@ Network: [Sepolia](https://sepolia.etherscan.io) (`chainId: 11155111`)
 
 | Contract | Address | Verification |
 |---|---|---|
-| SafeVendorToken | [`0x734c0e5a46624Ef79b9bcb6283f9537F3018B79B`](https://sepolia.etherscan.io/address/0x734c0e5a46624Ef79b9bcb6283f9537F3018B79B#code) | Pending |
-| MultiSigTreasury | [`0xaCCb68DE59C32300BB224525E05B90b9f69617B4`](https://sepolia.etherscan.io/address/0xaCCb68DE59C32300BB224525E05B90b9f69617B4#code) | Pending |
-| TokenVendor | [`0x96fAbD18cfEC365700b7D95c397b4AdF04274717`](https://sepolia.etherscan.io/address/0x96fAbD18cfEC365700b7D95c397b4AdF04274717#code) | Pending |
+| SafeVendorToken | [`0x734c0e5a46624Ef79b9bcb6283f9537F3018B79B`](https://sepolia.etherscan.io/address/0x734c0e5a46624Ef79b9bcb6283f9537F3018B79B#code) | Verified |
+| MultiSigTreasury | [`0xaCCb68DE59C32300BB224525E05B90b9f69617B4`](https://sepolia.etherscan.io/address/0xaCCb68DE59C32300BB224525E05B90b9f69617B4#code) | Verified |
+| TokenVendor | [`0x96fAbD18cfEC365700b7D95c397b4AdF04274717`](https://sepolia.etherscan.io/address/0x96fAbD18cfEC365700b7D95c397b4AdF04274717#code) | Verified |
 
 Deployment evidence is stored in
 [`deployments/sepolia.json`](deployments/sepolia.json).
