@@ -14,9 +14,9 @@ Network: [Sepolia](https://sepolia.etherscan.io) (`chainId: 11155111`)
 
 | Contract | Address | Verification |
 |---|---|---|
-| SafeVendorToken | [`0x734c0e5a46624Ef79b9bcb6283f9537F3018B79B`](https://sepolia.etherscan.io/address/0x734c0e5a46624Ef79b9bcb6283f9537F3018B79B#code) | Verified |
-| MultiSigTreasury | [`0xaCCb68DE59C32300BB224525E05B90b9f69617B4`](https://sepolia.etherscan.io/address/0xaCCb68DE59C32300BB224525E05B90b9f69617B4#code) | Verified |
-| TokenVendor | [`0x96fAbD18cfEC365700b7D95c397b4AdF04274717`](https://sepolia.etherscan.io/address/0x96fAbD18cfEC365700b7D95c397b4AdF04274717#code) | Verified |
+| SafeVendorToken | [`0x08271e00B298A44476f0b1e71d7A8Dfade182BCb`](https://sepolia.etherscan.io/address/0x08271e00B298A44476f0b1e71d7A8Dfade182BCb#code) | Verified |
+| MultiSigTreasury | [`0xD3F60906B1A52A9dd18ec9e8d212D38f3361Bd99`](https://sepolia.etherscan.io/address/0xD3F60906B1A52A9dd18ec9e8d212D38f3361Bd99#code) | Verified |
+| TokenVendor | [`0xE8499D41C7300D95832359b67e9af261d5D11DC6`](https://sepolia.etherscan.io/address/0xE8499D41C7300D95832359b67e9af261d5D11DC6#code) | Verified |
 
 Deployment evidence is stored in
 [`deployments/sepolia.json`](deployments/sepolia.json).
@@ -27,16 +27,16 @@ The treasury uses these fixed owners and a threshold of two:
 |---|---|
 | Owner 1 | `0x758090f1c15a76fFf31C5852e71f68ABCF24FA61` |
 | Owner 2 | `0xAD8C645384858B50b988BFEbb0c1DB6f996C5A76` |
-| Owner 3 | `0x50b74325eadd91918d9f4083635d9bB570dC9C56` |
+| Owner 3 | `0x8fcFd31be53b4b2F8C9394d49f92dE56Da2b75c2` |
 
 ### Live transaction evidence
 
 | Action | Transaction |
 |---|---|
-| Deploy SVT | [`0xe2ee5773...24fb0`](https://sepolia.etherscan.io/tx/0xe2ee577305b2bc4328241fab13fde9d69255d0bf0ae0c9ca64238c6544024fb0) |
-| Deploy Treasury | [`0x7a309937...f16c4`](https://sepolia.etherscan.io/tx/0x7a3099374ecd0aaea895cd12ba6150fa52bc0369dd0e73d9db14c87a2c4f16c4) |
-| Deploy Vendor | [`0xa82989ee...28f32`](https://sepolia.etherscan.io/tx/0xa82989eeedf57f3637bfdf4e012da63176561d8da4bec6883a9e4d8d52828f32) |
-| Fund 1,000,000 SVT inventory | [`0x6699f7ab...a3cd`](https://sepolia.etherscan.io/tx/0x6699f7ab4f76b58b748e66db08350f36aa618e09c8dba92a2707355f1011a3cd) |
+| Deploy SVT | [`0xbe942184...f718`](https://sepolia.etherscan.io/tx/0xbe942184e1d8ce104a4387febd5e525dba7b9029a602ecd6630a18d78af8f718) |
+| Deploy Treasury | [`0xa5d41639...dff5`](https://sepolia.etherscan.io/tx/0xa5d416397040e8ab7722d359b3b50650e237736d7a03bd190a98db5d8c18dff5) |
+| Deploy Vendor | [`0xaf20439f...da12`](https://sepolia.etherscan.io/tx/0xaf20439f1f628e419e1ca8b93b10ef4c5e2418f39fffe50a8d2dd0be5b05da12) |
+| Fund 1,000,000 SVT inventory | [`0x346e3319...d1ba`](https://sepolia.etherscan.io/tx/0x346e3319c504292119024496f69b94c94fc6bb038a942add248076bdc887d1ba) |
 
 The current deployment configures the deployer as Owner 1. Owner 2 and Owner 3
 are independent treasury addresses. The vendor holds the full 1,000,000 SVT

@@ -22,9 +22,9 @@ FRONTEND_SHOT = ROOT / "docs" / "evidence" / "frontend-desktop.png"
 FRONTEND_REPORT_SHOT = WORK / "frontend-report.png"
 ETHERSCAN_SHOT = ROOT / "docs" / "evidence" / "etherscan-treasury-verified.png"
 
-TOKEN_ADDRESS = "0x734c0e5a46624Ef79b9bcb6283f9537F3018B79B"
-TREASURY_ADDRESS = "0xaCCb68DE59C32300BB224525E05B90b9f69617B4"
-VENDOR_ADDRESS = "0x96fAbD18cfEC365700b7D95c397b4AdF04274717"
+TOKEN_ADDRESS = "0x08271e00B298A44476f0b1e71d7A8Dfade182BCb"
+TREASURY_ADDRESS = "0xD3F60906B1A52A9dd18ec9e8d212D38f3361Bd99"
+VENDOR_ADDRESS = "0xE8499D41C7300D95832359b67e9af261d5D11DC6"
 
 INK = RGBColor(17, 31, 26)
 MUTED = RGBColor(79, 92, 86)
@@ -826,7 +826,7 @@ def add_section_5(doc):
         [
             ("Owner 1", "0x758090f1c15a76fFf31C5852e71f68ABCF24FA61"),
             ("Owner 2", "0xAD8C645384858B50b988BFEbb0c1DB6f996C5A76"),
-            ("Owner 3", "0x50b74325eadd91918d9f4083635d9bB570dC9C56"),
+            ("Owner 3", "0x8fcFd31be53b4b2F8C9394d49f92dE56Da2b75c2"),
             ("Threshold", "2 of 3 confirmations required."),
             ("Vendor inventory", "1,000,000 SVT received at deployment."),
             ("Source verification", "All three contracts match Etherscan Standard JSON input."),
@@ -974,17 +974,17 @@ def add_section_7(doc):
         (
             "SafeVendorToken",
             TOKEN_ADDRESS,
-            "0xe2ee577305b2bc4328241fab13fde9d69255d0bf0ae0c9ca64238c6544024fb0",
+            "0xbe942184e1d8ce104a4387febd5e525dba7b9029a602ecd6630a18d78af8f718",
         ),
         (
             "MultiSigTreasury",
             TREASURY_ADDRESS,
-            "0x7a3099374ecd0aaea895cd12ba6150fa52bc0369dd0e73d9db14c87a2c4f16c4",
+            "0xa5d416397040e8ab7722d359b3b50650e237736d7a03bd190a98db5d8c18dff5",
         ),
         (
             "TokenVendor",
             VENDOR_ADDRESS,
-            "0xa82989eeedf57f3637bfdf4e012da63176561d8da4bec6883a9e4d8d52828f32",
+            "0xaf20439f1f628e419e1ca8b93b10ef4c5e2418f39fffe50a8d2dd0be5b05da12",
         ),
     ]
     for name, address, tx_hash in records:

@@ -7,7 +7,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "outputs");
 const WORK = path.join(ROOT, "work", "slides");
 const PREVIEW = path.join(WORK, "previews");
-const FINAL = path.join(OUT, "SafeVendor_Presentation_v4.pptx");
+const FINAL = path.join(OUT, "SafeVendor_Presentation_v5.pptx");
 const SKILL_DIR = process.env.PRESENTATION_SKILL_DIR;
 if (!SKILL_DIR) {
   throw new Error("PRESENTATION_SKILL_DIR must point to the presentations skill");
@@ -731,9 +731,9 @@ const presentation = Presentation.create({
     columnWidths: [220, 320, 160],
     values: [
       ["Contract", "Address", "State"],
-      ["SafeVendorToken", "0x734c…8B79B", "Verified"],
-      ["MultiSigTreasury", "0xaCCb…617B4", "Verified"],
-      ["TokenVendor", "0x96fA…74717", "Verified"]
+      ["SafeVendorToken", "0x0827…82BCb", "Verified"],
+      ["MultiSigTreasury", "0xD3F6…1Bd99", "Verified"],
+      ["TokenVendor", "0xE849…11DC6", "Verified"]
     ]
   });
   styleTable(table, { fontSize: 12.5 });
@@ -993,7 +993,7 @@ const result = await finalizePresentation({
   verifyArtifactToolImport: true,
   receiptPath: path.join(
     stagingDir,
-    "SafeVendor_Presentation_v4.validation.json"
+    `${path.basename(FINAL, ".pptx")}.validation.json`
   )
 });
 
