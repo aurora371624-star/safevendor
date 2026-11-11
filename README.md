@@ -1,45 +1,43 @@
-# SafeVendor — 去信任化代币发售 + 多签金库
+# SafeVendor — 代币发售 + 2-of-3 多签金库
 
-一个轻量的去中心化代币发售平台：投资者用 ETH 按固定价格购买代币，**所有 ETH 直接进入一个 2-of-3 多签金库**，任何单个成员都无法私自转走资金，从而在合约层面阻止「卷款跑路（rug pull）」。
+CDS528 小组项目。一句话：用户花 ETH 买我们发的代币，卖币收进来的 ETH 不落任何个人钱包，而是直接进一个 2-of-3 多签金库，凑不齐两个人的签名谁也动不了。这是对「项目方卷款跑路（rug pull）」这个老问题的一个最小实现。
 
-这是 CDS528 小组作业项目，部署在 **Sepolia 测试网**，仅用于教学演示，代币无任何价值。
+部署在 Sepolia 测试网，代币没有价值，纯教学演示。
 
-## 架构（3 个合约）
+## 合约结构
 
-| 合约 | 作用 |
-|------|------|
-| `SafeVendorToken.sol` | 标准 ERC-20 代币（SVT），部署时铸造 100 万枚给部署者 |
-| `TokenVendor.sol` | 固定价售货机：用户付 ETH → 得到 SVT；ETH 立即转发给金库 |
-| `MultiSigTreasury.sol` | 2-of-3 多签金库：发起 → 签名 → 凑满阈值才可执行转账 |
+就三个合约：
 
-### 关键机制
+| 合约 | 干什么 |
+|------|--------|
+| `contracts/SafeVendorToken.sol` | ERC-20 代币 SVT，部署时铸 100 万枚给部署者 |
+| `contracts/TokenVendor.sol` | 售货机：收 ETH 发 SVT，ETH 立刻转进金库 |
+| `contracts/MultiSigTreasury.sol` | 2-of-3 多签金库：提款要两个人签名才放行 |
 
-- **资金直入金库**：`buyTokens()` 在发放代币前，先把 `msg.value` 全量转给金库，销售方个人地址从不过手。
-- **2-of-3 多签**：`submitTransaction` 发起者自动算 1 票，还需至少 1 名其他 Owner 确认才能执行。
-- **防重复执行 / 防重复确认 / 防越权**：`executed` 状态位 + `isConfirmed` 映射 + `onlyOwner` 修饰符。
-- **重入防护**：金库遵循 Checks-Effects-Interactions（先标记 `executed` 再外部调用），并叠加 `ReentrancyGuard`。
+资金流：`买家 --ETH--> TokenVendor --ETH--> MultiSigTreasury --(2/3 签名)--> 提款地址`。
+
+## 几个设计决定
+
+- **ETH 不过手**：`buyTokens()` 在发代币之前，先把 `msg.value` 全量转给金库。售货机本身不留 ETH，项目方个人地址从头到尾碰不到钱。
+- **submit 即投一票**：`submitTransaction()` 的发起者自动算 1 票，所以演示流程是「发起 = 1/2，再签一人 = 2/2」。
+- **三道路栏**：`executed` 状态位挡住重复执行、`isConfirmed` 映射挡住同一个人重复确认、`onlyOwner` 挡住非 owner 操作。
+- **先改状态再转账**：`executeTransaction()` 先标记 `executed = true` 再做外部调用（Checks-Effects-Interactions），再叠一层 OpenZeppelin 的 `ReentrancyGuard`。
 
 ## 环境要求
 
-- Node.js 18+
-- 一个 Sepolia 测试网 RPC 地址（Infura / Alchemy 免费申请）
-- 一个**测试专用**钱包的私钥（不要用有真实资产的钱包）
-- 一个 Etherscan API Key（免费注册，用于验证合约）
+- Node.js 18+（本地用 22 跑的）
+- npm 依赖：Hardhat 2.26 + OpenZeppelin Contracts 5.1（`@nomicfoundation/hardhat-toolbox`）
+- 一个 Sepolia RPC 地址（Infura / Alchemy 免费）
+- 一个**只用于测试**的钱包私钥（别用有真钱的）
+- 一个 Etherscan API key（验证合约用）
 
-## 快速开始
+## 跑起来
 
 ```bash
-# 1. 安装依赖
 npm install
-
-# 2. 编译
-npx hardhat compile
-
-# 3. 运行测试（9 个用例）
-npx hardhat test
-
-# 4. 本地验证部署脚本
-npx hardhat run scripts/deploy.js
+npx hardhat compile      # 输出 "Compiled 15 Solidity files successfully"
+npx hardhat test         # 9 个用例，约 0.5 秒全绿
+npx hardhat run scripts/deploy.js   # 本地网络试跑部署脚本
 ```
 
 ## 部署到 Sepolia
@@ -52,39 +50,43 @@ export ETHERSCAN_API_KEY="<你的 Etherscan API Key>"
 npm run deploy
 ```
 
-部署脚本会依次部署三个合约，打印地址，并把 100 万 SVT 转入售货机。
+脚本会依次部署三个合约、打印地址，并把 100 万 SVT 打进售货机。
 
-## 验证合约（R5 加分项）
+## 验证合约（Etherscan）
 
 ```bash
 npx hardhat verify --network sepolia <Token地址> 1000000000000000000000000
-
-npx hardhat verify --network sepolia <Treasury地址> \
-  "[owner1地址,owner2地址,owner3地址]" 2
-
-npx hardhat verify --network sepolia <Vendor地址> \
-  <Token地址> <Treasury地址> 100
+npx hardhat verify --network sepolia <Treasury地址> "[owner1,owner2,owner3]" 2
+npx hardhat verify --network sepolia <Vendor地址> <Token地址> <Treasury地址> 100
 ```
 
-验证通过后，把 Etherscan 上的验证链接贴进报告 R5。
+验证完把 Etherscan 链接贴进报告 R5。
 
-## 安全（R4）
+## 安全
 
-已运行 [Slither](https://github.com/crytic/slither) 静态扫描，结果见 `docs/slither-output.txt`：**无 High / Medium 级漏洞**，仅有 5 条 INFO 级提示（低级别 `call` 为转账必需、`pragma` 版本约束、`solc-version` 版本建议、缺失零地址检查提示），均已在报告中逐条说明。
+跑过 [Slither](https://github.com/crytic/slither) 静态分析（`slither . --exclude-dependencies`），结果在 `docs/slither-output.txt`：没有 High / Medium 级发现。剩下 5 条都是 INFO 级提示——`low-level-calls`（两处转账 `call` 都做了返回值检查）、`pragma` / `solc-version`（版本约束提示）、`missing-zero-check`（构造函数可再加零地址校验），逐条在报告里解释了。
 
 ### 威胁模型
 
-| 威胁 | 场景 | 缓解 |
-|------|------|------|
-| 单点作恶（Rug Pull） | 单个成员私自转走全部 ETH | 2-of-3 多签，单人无法执行转账 |
-| 重放攻击 | 同一笔提款重复执行 | `executed` 状态位，执行一次后再次调用即 revert |
-| 重复确认 | 同一 Owner 反复确认凑阈值 | `isConfirmed` 映射，二次确认 revert |
-| 重入攻击 | 恶意合约在收款时回调提款 | CEI + `ReentrancyGuard` |
-| 越权操作 | 非 Owner 发起/确认交易 | `onlyOwner` 修饰符 |
+| 威胁 | 攻击长什么样 | 我们怎么挡 | 对应测试 |
+|------|-------------|-----------|---------|
+| Rug pull | 单人想转走全部 ETH | 2-of-3 多签，一个签名凑不满 | `submit auto-confirms, then confirm + execute` |
+| 重放 | 同一笔提款执行两次 | `executed` 状态位，第二次调用 revert | `rejects re-execution` |
+| 重复确认 | 同一个人反复确认刷票 | `isConfirmed` 映射 | `rejects a double confirmation` |
+| 重入 | 收款合约回调提款 | CEI + `ReentrancyGuard` | — |
+| 越权 | 非 owner 发起/确认 | `onlyOwner` | `rejects non-owner submit and confirm` |
 
-## 合规声明
+## 已知局限
 
-本项目仅部署在 Sepolia 测试网，使用测试币，代币无经济价值，纯属教学用途。不构成任何形式的募资或证券发行。
+- 多签是固定 2-of-3，owner 不能增删、没做时间锁；要上生产这俩都得补。
+- 售货机是固定价，不随供需调价，库存卖完就停。
+- `submitTransaction` 发起者自动投票是省一步操作的取舍，代价是发起者不能「只提案不表态」。
+
+这些都不在这份作业范围内。
+
+## 合规
+
+只在 Sepolia 测试网部署，测试币、无价值、纯教学，不构成募资或证券发行。
 
 ## 许可
 
