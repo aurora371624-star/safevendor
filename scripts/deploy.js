@@ -1,61 +1,128 @@
-const hre = require("hardhat");
-const { ethers } = hre;
+const fs = require("node:fs");
+const path = require("node:path");
+const { ethers, network } = require("hardhat");
 
-async function main() {
-  const initialSupply = ethers.parseEther("1000000"); // 1,000,000 SVT
-  const rate = 100n; // 100 SVT per 1 ETH
-  const required = 2;
+const TOKEN_SUPPLY = ethers.parseEther("1000000");
+const PRICE_PER_TOKEN = ethers.parseEther("0.0001");
+const THRESHOLD = 2;
 
-  let deployer;
-  let owners;
+function parseOwners(deployerAddress) {
+  const configured = (process.env.TREASURY_OWNERS || "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
 
-  if (process.env.PRIVATE_KEY) {
-    // Real-network deploy: one key pays gas, two extra owners are generated for the demo.
-    deployer = new ethers.Wallet(process.env.PRIVATE_KEY, ethers.provider);
-    const o2 = ethers.Wallet.createRandom();
-    const o3 = ethers.Wallet.createRandom();
-    owners = [deployer.address, o2.address, o3.address];
-    console.log("\n=== 3 owners (for the 2-of-3 multisig) ===");
-    console.log("Owner1 (you, deploys) :", deployer.address);
-    console.log("Owner2 address        :", o2.address);
-    console.log("Owner2 PRIVATE KEY    :", o2.privateKey);
-    console.log("Owner3 address        :", o3.address);
-    console.log("Owner3 PRIVATE KEY    :", o3.privateKey);
-    console.log("Give Owner2/Owner3 keys to teammates B and C to import in MetaMask.\n");
-  } else {
-    const [d, o2, o3] = await ethers.getSigners();
-    deployer = d;
-    owners = [d.address, o2.address, o3.address];
+  if (configured.length > 0) {
+    if (configured.length !== 3) {
+      throw new Error("TREASURY_OWNERS must contain exactly three addresses");
+    }
+    return configured;
   }
 
-  console.log("Deploying with account:", deployer.address);
+  const fallback = [
+    deployerAddress,
+    process.env.OWNER_2,
+    process.env.OWNER_3
+  ].filter(Boolean);
+  if (fallback.length !== 3) {
+    throw new Error(
+      "Provide TREASURY_OWNERS or PRIVATE_KEY, OWNER_2, and OWNER_3"
+    );
+  }
+  return fallback;
+}
 
-  const Token = await hre.ethers.getContractFactory("SafeVendorToken");
-  const token = await Token.deploy(initialSupply);
+async function main() {
+  const [deployer] = await ethers.getSigners();
+  if (!deployer) {
+    throw new Error("No deployer account configured");
+  }
+
+  const owners = parseOwners(deployer.address);
+  const providerNetwork = await ethers.provider.getNetwork();
+  const expectedChainId = network.name === "sepolia" ? 11155111n : null;
+  if (expectedChainId && providerNetwork.chainId !== expectedChainId) {
+    throw new Error(
+      `Expected chain ${expectedChainId}, got ${providerNetwork.chainId}`
+    );
+  }
+
+  console.log(`Network: ${network.name} (${providerNetwork.chainId})`);
+  console.log(`Deployer: ${deployer.address}`);
+  console.log(`Treasury owners: ${owners.join(", ")}`);
+
+  const Token = await ethers.getContractFactory("SafeVendorToken");
+  const token = await Token.deploy(TOKEN_SUPPLY);
   await token.waitForDeployment();
-  console.log("SafeVendorToken  :", token.target);
+  const tokenAddress = await token.getAddress();
+  const tokenDeployment = token.deploymentTransaction();
+  const tokenReceipt = await tokenDeployment.wait();
+  console.log(`SafeVendorToken: ${tokenAddress}`);
 
-  const Treasury = await hre.ethers.getContractFactory("MultiSigTreasury");
-  const treasury = await Treasury.deploy(owners, required);
+  const Treasury = await ethers.getContractFactory("MultiSigTreasury");
+  const treasury = await Treasury.deploy(owners, THRESHOLD);
   await treasury.waitForDeployment();
-  console.log("MultiSigTreasury :", treasury.target);
+  const treasuryAddress = await treasury.getAddress();
+  const treasuryDeployment = treasury.deploymentTransaction();
+  const treasuryReceipt = await treasuryDeployment.wait();
+  console.log(`MultiSigTreasury: ${treasuryAddress}`);
 
-  const Vendor = await hre.ethers.getContractFactory("TokenVendor");
-  const vendor = await Vendor.deploy(token.target, treasury.target, rate);
+  const Vendor = await ethers.getContractFactory("TokenVendor");
+  const vendor = await Vendor.deploy(
+    tokenAddress,
+    treasuryAddress,
+    PRICE_PER_TOKEN
+  );
   await vendor.waitForDeployment();
-  console.log("TokenVendor      :", vendor.target);
+  const vendorAddress = await vendor.getAddress();
+  const vendorDeployment = vendor.deploymentTransaction();
+  const vendorReceipt = await vendorDeployment.wait();
+  console.log(`TokenVendor: ${vendorAddress}`);
 
-  console.log("Transferring sale stock to the vendor...");
-  const tx = await token.transfer(vendor.target, initialSupply);
-  await tx.wait();
-  console.log("Vendor now holds", (await token.balanceOf(vendor.target)).toString(), "SVT");
+  const fundingTx = await token.transfer(vendorAddress, TOKEN_SUPPLY);
+  await fundingTx.wait();
+  console.log(`Vendor inventory funded: ${fundingTx.hash}`);
 
-  console.log("\n--- Deployment summary ---");
-  console.log("Token    :", token.target);
-  console.log("Treasury :", treasury.target);
-  console.log("Vendor   :", vendor.target);
-  console.log("Owners   :", owners.join(", "));
-  console.log("Required :", required, "of", owners.length);
+  const deployment = {
+    network: network.name,
+    chainId: providerNetwork.chainId.toString(),
+    deployedAt: new Date().toISOString(),
+    deployer: deployer.address,
+    token: {
+      address: tokenAddress,
+      deploymentHash: tokenDeployment.hash,
+      deploymentBlock: tokenReceipt.blockNumber
+    },
+    treasury: {
+      address: treasuryAddress,
+      owners,
+      threshold: THRESHOLD,
+      deploymentHash: treasuryDeployment.hash,
+      deploymentBlock: treasuryReceipt.blockNumber
+    },
+    vendor: {
+      address: vendorAddress,
+      pricePerToken: PRICE_PER_TOKEN.toString(),
+      tokenAddress,
+      treasuryAddress,
+      deploymentHash: vendorDeployment.hash,
+      deploymentBlock: vendorReceipt.blockNumber,
+      inventoryFundingHash: fundingTx.hash
+    }
+  };
+
+  const deploymentsDir = path.join(__dirname, "..", "deployments");
+  const frontendDir = path.join(__dirname, "..", "frontend", "src");
+  fs.mkdirSync(deploymentsDir, { recursive: true });
+  fs.mkdirSync(frontendDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(deploymentsDir, `${network.name}.json`),
+    `${JSON.stringify(deployment, null, 2)}\n`
+  );
+  fs.writeFileSync(
+    path.join(frontendDir, "deployment.json"),
+    `${JSON.stringify(deployment, null, 2)}\n`
+  );
 }
 
 main().catch((error) => {

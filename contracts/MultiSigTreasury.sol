@@ -1,120 +1,152 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity 0.8.24;
 
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /// @title MultiSigTreasury
-/// @notice N-of-M multisig wallet holding the sale proceeds. A transaction must be
-///         submitted by an owner (who auto-confirms it) and confirmed by additional
-///         owners until the threshold is reached before it can be executed.
+/// @notice Fixed-owner multisig treasury for sale proceeds.
+/// @dev Owners and threshold are immutable. The contract has no upgrade or pause path.
 contract MultiSigTreasury is ReentrancyGuard {
-    address[] public owners;
-    uint256 public immutable required;
-    mapping(address => bool) public isOwner;
-
     struct Transaction {
         address to;
         uint256 value;
         bytes data;
         bool executed;
-        uint256 confirmations;
+        uint256 confirmationCount;
     }
 
-    Transaction[] public transactions;
+    mapping(address => bool) public isOwner;
     mapping(uint256 => mapping(address => bool)) public isConfirmed;
+    mapping(uint256 => Transaction) private _transactions;
+
+    address[] private _owners;
+    uint256 public immutable threshold;
+    uint256 public transactionCount;
+
+    error NotOwner();
+    error InvalidOwnerConfiguration();
+    error InvalidThreshold();
+    error InvalidDestination();
+    error TransactionAlreadyExecuted();
+    error AlreadyConfirmed();
+    error NotConfirmed();
+    error InsufficientConfirmations();
+    error CallFailed();
+
+    event Deposit(address indexed sender, uint256 amount);
+    event TransactionSubmitted(
+        uint256 indexed transactionId,
+        address indexed owner,
+        address indexed to,
+        uint256 value,
+        bytes data
+    );
+    event TransactionConfirmed(
+        uint256 indexed transactionId,
+        address indexed owner,
+        uint256 confirmationCount
+    );
+    event TransactionExecuted(
+        uint256 indexed transactionId,
+        address indexed executor
+    );
 
     modifier onlyOwner() {
-        require(isOwner[msg.sender], "Treasury: not an owner");
+        if (!isOwner[msg.sender]) revert NotOwner();
         _;
     }
 
-    modifier txExists(uint256 txId) {
-        require(txId < transactions.length, "Treasury: tx does not exist");
-        _;
-    }
-
-    modifier notExecuted(uint256 txId) {
-        require(!transactions[txId].executed, "Treasury: tx already executed");
-        _;
-    }
-
-    event TransactionSubmitted(uint256 indexed txId, address indexed owner, address to, uint256 value);
-    event TransactionConfirmed(uint256 indexed txId, address indexed owner);
-    event TransactionRevoked(uint256 indexed txId, address indexed owner);
-    event TransactionExecuted(uint256 indexed txId, address to, uint256 value);
-
-    constructor(address[] memory _owners, uint256 _required) {
-        require(_owners.length >= _required, "Treasury: owners < required");
-        require(_required > 0, "Treasury: required must be > 0");
-        for (uint256 i = 0; i < _owners.length; i++) {
-            address owner = _owners[i];
-            require(owner != address(0), "Treasury: zero owner");
-            require(!isOwner[owner], "Treasury: duplicate owner");
-            isOwner[owner] = true;
-            owners.push(owner);
+    constructor(address[] memory initialOwners, uint256 threshold_) {
+        if (initialOwners.length == 0) revert InvalidOwnerConfiguration();
+        if (threshold_ == 0 || threshold_ > initialOwners.length) {
+            revert InvalidThreshold();
         }
-        required = _required;
+
+        for (uint256 i = 0; i < initialOwners.length; i++) {
+            address owner = initialOwners[i];
+            if (owner == address(0) || isOwner[owner]) {
+                revert InvalidOwnerConfiguration();
+            }
+            isOwner[owner] = true;
+            _owners.push(owner);
+        }
+
+        threshold = threshold_;
     }
 
-    receive() external payable {}
+    receive() external payable {
+        emit Deposit(msg.sender, msg.value);
+    }
 
-    /// @notice Submit a transaction; the submitter auto-confirms it.
-    function submitTransaction(address to, uint256 value, bytes calldata data)
-        external
-        onlyOwner
-        returns (uint256 txId)
-    {
-        txId = transactions.length;
-        transactions.push(
-            Transaction({to: to, value: value, data: data, executed: false, confirmations: 1})
+    /// @notice Submit and automatically confirm a treasury transaction.
+    function submitTransaction(
+        address to,
+        uint256 value,
+        bytes calldata data
+    ) external onlyOwner returns (uint256 transactionId) {
+        if (to == address(0)) revert InvalidDestination();
+
+        transactionId = transactionCount++;
+        Transaction storage transaction = _transactions[transactionId];
+        transaction.to = to;
+        transaction.value = value;
+        transaction.data = data;
+        transaction.confirmationCount = 1;
+        isConfirmed[transactionId][msg.sender] = true;
+
+        emit TransactionSubmitted(
+            transactionId,
+            msg.sender,
+            to,
+            value,
+            data
         );
-        isConfirmed[txId][msg.sender] = true;
-        emit TransactionSubmitted(txId, msg.sender, to, value);
-        emit TransactionConfirmed(txId, msg.sender);
+        emit TransactionConfirmed(transactionId, msg.sender, 1);
     }
 
-    /// @notice Confirm a pending transaction.
-    function confirmTransaction(uint256 txId)
-        external
-        onlyOwner
-        txExists(txId)
-        notExecuted(txId)
-    {
-        require(!isConfirmed[txId][msg.sender], "Treasury: already confirmed");
-        transactions[txId].confirmations += 1;
-        isConfirmed[txId][msg.sender] = true;
-        emit TransactionConfirmed(txId, msg.sender);
+    function confirmTransaction(uint256 transactionId) external onlyOwner {
+        Transaction storage transaction = _transactions[transactionId];
+        if (transaction.executed) revert TransactionAlreadyExecuted();
+        if (isConfirmed[transactionId][msg.sender]) revert AlreadyConfirmed();
+        if (transaction.confirmationCount == 0) revert NotConfirmed();
+
+        isConfirmed[transactionId][msg.sender] = true;
+        transaction.confirmationCount++;
+
+        emit TransactionConfirmed(
+            transactionId,
+            msg.sender,
+            transaction.confirmationCount
+        );
     }
 
-    /// @notice Revoke a previous confirmation.
-    function revokeConfirmation(uint256 txId)
-        external
-        onlyOwner
-        txExists(txId)
-        notExecuted(txId)
-    {
-        require(isConfirmed[txId][msg.sender], "Treasury: not confirmed");
-        transactions[txId].confirmations -= 1;
-        isConfirmed[txId][msg.sender] = false;
-        emit TransactionRevoked(txId, msg.sender);
+    /// @notice Execute a transaction after the confirmation threshold is met.
+    function executeTransaction(
+        uint256 transactionId
+    ) external onlyOwner nonReentrant {
+        Transaction storage transaction = _transactions[transactionId];
+        if (transaction.executed) revert TransactionAlreadyExecuted();
+        if (transaction.confirmationCount < threshold) {
+            revert InsufficientConfirmations();
+        }
+
+        // Checks-effects-interactions: mark the transaction before the call.
+        transaction.executed = true;
+        emit TransactionExecuted(transactionId, msg.sender);
+
+        (bool success, ) = transaction.to.call{value: transaction.value}(
+            transaction.data
+        );
+        if (!success) revert CallFailed();
     }
 
-    /// @notice Execute a transaction once the confirmation threshold is reached.
-    function executeTransaction(uint256 txId)
-        external
-        onlyOwner
-        txExists(txId)
-        notExecuted(txId)
-        nonReentrant
-    {
-        Transaction storage t = transactions[txId];
-        require(t.confirmations >= required, "Treasury: not enough confirmations");
-        require(address(this).balance >= t.value, "Treasury: insufficient balance");
+    function getTransaction(
+        uint256 transactionId
+    ) external view returns (Transaction memory) {
+        return _transactions[transactionId];
+    }
 
-        t.executed = true; // Checks-Effects-Interactions: mark before the external call
-
-        (bool ok, ) = t.to.call{value: t.value}(t.data);
-        require(ok, "Treasury: call failed");
-        emit TransactionExecuted(txId, t.to, t.value);
+    function getOwners() external view returns (address[] memory) {
+        return _owners;
     }
 }
