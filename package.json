@@ -1,0 +1,18 @@
+{
+  "name": "safevendor",
+  "version": "1.0.0",
+  "description": "SafeVendor: trustless token sale with a 2-of-3 multisig treasury (CDS528 group project)",
+  "license": "MIT",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy": "hardhat run scripts/deploy.js --network sepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.0.0",
+    "hardhat": "^2.26.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.1.0"
+  }
+}

@@ -1,0 +1,5 @@
+Detector: missing-zero-check
+Detector: pragma
+Detector: solc-version
+Detector: low-level-calls
+INFO:Slither:. analyzed (15 contracts with 102 detectors), 5 result(s) found
