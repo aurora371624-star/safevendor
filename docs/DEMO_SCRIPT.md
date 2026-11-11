@@ -4,8 +4,8 @@
 
 1. Open the dApp at the local URL or the deployed frontend.
 2. Have MetaMask set to Sepolia.
-3. Confirm that the dashboard shows Treasury balance `0.009 ETH`, Vendor
-   inventory `999,900 SVT`, and threshold `2 of 3`.
+3. Confirm that the dashboard shows Treasury balance `0 ETH`, Vendor inventory
+   `1,000,000 SVT`, and threshold `2 of 3`.
 4. Keep the Etherscan contract page open as a fallback for network problems.
 
 ## Two-minute flow
@@ -16,10 +16,10 @@
 4. Execute the purchase.
 5. Show the buyer balance increase and Treasury balance update.
 6. Open the purchase transaction on Etherscan.
-7. Scroll to Recent Proposals and show proposal `#0`.
+7. Submit a small treasury proposal from Owner 1.
 8. Explain that the submitter counts as the first confirmation.
-9. Use owner 2 to confirm.
-10. Execute after two confirmations.
+9. Use Owner 2 to add the second confirmation.
+10. Execute after the two confirmations reach the threshold.
 11. Show the recipient balance and the `executed` proposal state.
 12. Open one verified contract and show the source, constructor arguments, and
     ABI.

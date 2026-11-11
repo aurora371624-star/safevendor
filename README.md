@@ -12,30 +12,35 @@ Sepolia and uses worthless test assets only.
 
 Network: [Sepolia](https://sepolia.etherscan.io) (`chainId: 11155111`)
 
-| Contract | Address | Source verification |
+| Contract | Address | Verification |
 |---|---|---|
-| SafeVendorToken | [`0x69D7f801AA1EB37321B6F7C1843E380c76C4deeA`](https://sepolia.etherscan.io/address/0x69D7f801AA1EB37321B6F7C1843E380c76C4deeA#code) | [Verified](https://sepolia.etherscan.io/address/0x69D7f801AA1EB37321B6F7C1843E380c76C4deeA#code) |
-| MultiSigTreasury | [`0x53C6F389B8773C9C74b275BCb2B55ba4C119F13d`](https://sepolia.etherscan.io/address/0x53C6F389B8773C9C74b275BCb2B55ba4C119F13d#code) | [Verified](https://sepolia.etherscan.io/address/0x53C6F389B8773C9C74b275BCb2B55ba4C119F13d#code) |
-| TokenVendor | [`0x6030d8D8674f96F3e8BF9dCe5AF74b65247d519A`](https://sepolia.etherscan.io/address/0x6030d8D8674f96F3e8BF9dCe5AF74b65247d519A#code) | [Verified](https://sepolia.etherscan.io/address/0x6030d8D8674f96F3e8BF9dCe5AF74b65247d519A#code) |
+| SafeVendorToken | [`0x734c0e5a46624Ef79b9bcb6283f9537F3018B79B`](https://sepolia.etherscan.io/address/0x734c0e5a46624Ef79b9bcb6283f9537F3018B79B#code) | Pending |
+| MultiSigTreasury | [`0xaCCb68DE59C32300BB224525E05B90b9f69617B4`](https://sepolia.etherscan.io/address/0xaCCb68DE59C32300BB224525E05B90b9f69617B4#code) | Pending |
+| TokenVendor | [`0x96fAbD18cfEC365700b7D95c397b4AdF04274717`](https://sepolia.etherscan.io/address/0x96fAbD18cfEC365700b7D95c397b4AdF04274717#code) | Pending |
 
 Deployment evidence is stored in
 [`deployments/sepolia.json`](deployments/sepolia.json).
+
+The treasury uses these fixed owners and a threshold of two:
+
+| Owner | Address |
+|---|---|
+| Owner 1 | `0x758090f1c15a76fFf31C5852e71f68ABCF24FA61` |
+| Owner 2 | `0xAD8C645384858B50b988BFEbb0c1DB6f996C5A76` |
+| Owner 3 | `0x50b74325eadd91918d9f4083635d9bB570dC9C56` |
 
 ### Live transaction evidence
 
 | Action | Transaction |
 |---|---|
-| Deploy SVT | [`0x230cc3be...ab34a7`](https://sepolia.etherscan.io/tx/0x230cc3be5f5ead3886ce1ff5ccdc842cbe4831ce455db8ca9715cca849ab34a7) |
-| Deploy Treasury | [`0xa1c8b8ab...dbad4e`](https://sepolia.etherscan.io/tx/0xa1c8b8abc284f6849720e9973048c1ad111610139ccbfcf161af242291dbad4e) |
-| Deploy Vendor | [`0xfdf11edf...dfa8f7e`](https://sepolia.etherscan.io/tx/0xfdf11edf7d8f415c5635191f043155b69b456644599b438b074d50a11dfa8f7e) |
-| Fund 1,000,000 SVT inventory | [`0xaf123d0d...59f73d6`](https://sepolia.etherscan.io/tx/0xaf123d0dfe586e4ba416a3161e5148efb225901cbd144dfc079061ed159f73d6) |
-| Buy 100 SVT with 0.01 ETH | [`0xbe98f58b...a3da29a`](https://sepolia.etherscan.io/tx/0xbe98f58bb0fb55dba6283720c9a12fca8e8d545e36814cd3c66924ba9a3da29a) |
-| Submit treasury proposal | [`0x019e15f6...5c11fa`](https://sepolia.etherscan.io/tx/0x019e15f677db6b42d5e641ee5a84f0c4b2f45b4f825d1657c77122fdcd5c11fa) |
-| Second owner confirms | [`0xb573584d...5ef6fe`](https://sepolia.etherscan.io/tx/0xb573584d4eabc192fdb8fbfba55c290412f0ebf68cee1bcc1a353095cc5ef6fe) |
-| Execute proposal | [`0xcefee4c9...f8775e`](https://sepolia.etherscan.io/tx/0xcefee4c9350b8007c146db0f5587ccf5be3424143509c1519762174f15f8775e) |
+| Deploy SVT | [`0xe2ee5773...24fb0`](https://sepolia.etherscan.io/tx/0xe2ee577305b2bc4328241fab13fde9d69255d0bf0ae0c9ca64238c6544024fb0) |
+| Deploy Treasury | [`0x7a309937...f16c4`](https://sepolia.etherscan.io/tx/0x7a3099374ecd0aaea895cd12ba6150fa52bc0369dd0e73d9db14c87a2c4f16c4) |
+| Deploy Vendor | [`0xa82989ee...28f32`](https://sepolia.etherscan.io/tx/0xa82989eeedf57f3637bfdf4e012da63176561d8da4bec6883a9e4d8d52828f32) |
+| Fund 1,000,000 SVT inventory | [`0x6699f7ab...a3cd`](https://sepolia.etherscan.io/tx/0x6699f7ab4f76b58b748e66db08350f36aa618e09c8dba92a2707355f1011a3cd) |
 
-The demo bought 100 SVT for 0.01 ETH, routed the ETH directly to Treasury, and
-executed a 0.001 ETH transfer after two distinct owners confirmed it.
+The current deployment configures the deployer as Owner 1. Owner 2 and Owner 3
+are independent treasury addresses. The vendor holds the full 1,000,000 SVT
+inventory.
 
 ## Architecture
 
