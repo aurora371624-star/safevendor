@@ -1,14 +1,34 @@
 const hre = require("hardhat");
+const { ethers } = hre;
 
 async function main() {
-  const [deployer, owner2, owner3] = await hre.ethers.getSigners();
+  const initialSupply = ethers.parseEther("1000000"); // 1,000,000 SVT
+  const rate = 100n; // 100 SVT per 1 ETH
+  const required = 2;
+
+  let deployer;
+  let owners;
+
+  if (process.env.PRIVATE_KEY) {
+    // Real-network deploy: one key pays gas, two extra owners are generated for the demo.
+    deployer = new ethers.Wallet(process.env.PRIVATE_KEY, ethers.provider);
+    const o2 = ethers.Wallet.createRandom();
+    const o3 = ethers.Wallet.createRandom();
+    owners = [deployer.address, o2.address, o3.address];
+    console.log("\n=== 3 owners (for the 2-of-3 multisig) ===");
+    console.log("Owner1 (you, deploys) :", deployer.address);
+    console.log("Owner2 address        :", o2.address);
+    console.log("Owner2 PRIVATE KEY    :", o2.privateKey);
+    console.log("Owner3 address        :", o3.address);
+    console.log("Owner3 PRIVATE KEY    :", o3.privateKey);
+    console.log("Give Owner2/Owner3 keys to teammates B and C to import in MetaMask.\n");
+  } else {
+    const [d, o2, o3] = await ethers.getSigners();
+    deployer = d;
+    owners = [d.address, o2.address, o3.address];
+  }
 
   console.log("Deploying with account:", deployer.address);
-
-  const initialSupply = hre.ethers.parseEther("1000000"); // 1,000,000 SVT
-  const rate = 100n; // 100 SVT per 1 ETH
-  const owners = [deployer.address, owner2.address, owner3.address];
-  const required = 2;
 
   const Token = await hre.ethers.getContractFactory("SafeVendorToken");
   const token = await Token.deploy(initialSupply);

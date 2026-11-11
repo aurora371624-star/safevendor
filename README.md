@@ -55,6 +55,16 @@ npm run deploy
 
 部署脚本会依次部署三个合约，打印地址，并把 100 万 SVT 转入售货机。
 
+### 已部署合约地址（Sepolia）
+
+| 合约 | 地址 |
+|------|------|
+| `SafeVendorToken` | `0x69F2634bcD0f08e49A60c6761BC6Cbd1443F6858` |
+| `MultiSigTreasury` | `0x50C4A88Bf6b3150B4044FC5Ce8A9D0Afe74c7452` |
+| `TokenVendor` | `0xeC5545c58d5e0DE6Cf36a93752cB4876b5EE2957` |
+
+多签 owner（2-of-3）：`0x758090f1c15a76fFf31C5852e71f68ABCF24FA61`、`0x769c0E25611488d712C1f79E7EC71B71fe91069f`、`0x8BbA1Bc46A6093541fA24c46d093bD8DA287DD20`。
+
 ## 验证合约（R5 加分项）
 
 ```bash
