@@ -21,7 +21,8 @@
 
 ## 环境要求
 
-- Node.js 18+
+- Node.js 18+（本地用 22.22 验证过）
+- npm 依赖：`hardhat ^2.26`、`@nomicfoundation/hardhat-toolbox ^6.0`、`@openzeppelin/contracts ^5.1`（完整清单见 `package.json`）
 - 一个 Sepolia 测试网 RPC 地址（Infura / Alchemy 免费申请）
 - 一个**测试专用**钱包的私钥（不要用有真实资产的钱包）
 - 一个 Etherscan API Key（免费注册，用于验证合约）
@@ -32,10 +33,10 @@
 # 1. 安装依赖
 npm install
 
-# 2. 编译
+# 2. 编译（输出 "Compiled 15 Solidity files successfully"）
 npx hardhat compile
 
-# 3. 运行测试（9 个用例）
+# 3. 运行测试（输出 "9 passing"，约 0.5 秒）
 npx hardhat test
 
 # 4. 本地验证部署脚本
@@ -70,17 +71,25 @@ npx hardhat verify --network sepolia <Vendor地址> \
 
 ## 安全（R4）
 
-已运行 [Slither](https://github.com/crytic/slither) 静态扫描，结果见 `docs/slither-output.txt`：**无 High / Medium 级漏洞**，仅有 5 条 INFO 级提示（低级别 `call` 为转账必需、`pragma` 版本约束、`solc-version` 版本建议、缺失零地址检查提示），均已在报告中逐条说明。
+已用 `slither . --exclude-dependencies` 运行 [Slither](https://github.com/crytic/slither) 静态扫描，结果见 `docs/slither-output.txt`：**无 High / Medium 级漏洞**，仅有 5 条 INFO 级提示（低级别 `call` 为转账必需、`pragma` 版本约束、`solc-version` 版本建议、缺失零地址检查提示），均已在报告中逐条说明。
 
 ### 威胁模型
 
-| 威胁 | 场景 | 缓解 |
-|------|------|------|
-| 单点作恶（Rug Pull） | 单个成员私自转走全部 ETH | 2-of-3 多签，单人无法执行转账 |
-| 重放攻击 | 同一笔提款重复执行 | `executed` 状态位，执行一次后再次调用即 revert |
-| 重复确认 | 同一 Owner 反复确认凑阈值 | `isConfirmed` 映射，二次确认 revert |
-| 重入攻击 | 恶意合约在收款时回调提款 | CEI + `ReentrancyGuard` |
-| 越权操作 | 非 Owner 发起/确认交易 | `onlyOwner` 修饰符 |
+| 威胁 | 场景 | 缓解 | 对应测试 |
+|------|------|------|---------|
+| 单点作恶（Rug Pull） | 单个成员私自转走全部 ETH | 2-of-3 多签，单人无法执行转账 | `submit auto-confirms, then confirm + execute` |
+| 重放攻击 | 同一笔提款重复执行 | `executed` 状态位，执行一次后再次调用即 revert | `rejects re-execution` |
+| 重复确认 | 同一 Owner 反复确认凑阈值 | `isConfirmed` 映射，二次确认 revert | `rejects a double confirmation` |
+| 重入攻击 | 恶意合约在收款时回调提款 | CEI + `ReentrancyGuard` | — |
+| 越权操作 | 非 Owner 发起/确认交易 | `onlyOwner` 修饰符 | `rejects non-owner submit and confirm` |
+
+## 已知局限
+
+- 多签是固定 2-of-3，owner 不能增删、没做时间锁；要上生产这俩都得补。
+- 售货机是固定价，不随供需调价，库存卖完就停。
+- `submitTransaction` 发起者自动投票，代价是发起者不能「只提案不表态」。
+
+这些不在本作业范围内。
 
 ## 合规声明
 
