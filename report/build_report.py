@@ -888,8 +888,8 @@ def add_section_6(doc):
             ),
             (
                 "R7 Presentation",
-                "Editable slide deck, 12-minute flow, four speaker roles, Q&A preparation.",
-                "Medium until real member roles are assigned and rehearsed.",
+                "Editable slide deck, 12-minute flow, five speaker roles, Q&A preparation.",
+                "Medium until presenter assignments are confirmed and rehearsed.",
             ),
         ],
         [1.65, 3.7, 1.15],
