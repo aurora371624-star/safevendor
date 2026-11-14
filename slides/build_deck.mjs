@@ -7,7 +7,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "outputs");
 const WORK = path.join(ROOT, "work", "slides");
 const PREVIEW = path.join(WORK, "previews");
-const FINAL = path.join(OUT, "SafeVendor_Presentation_v5.pptx");
+const FINAL = path.join(OUT, "SafeVendor_Presentation.pptx");
 const SKILL_DIR = process.env.PRESENTATION_SKILL_DIR;
 if (!SKILL_DIR) {
   throw new Error("PRESENTATION_SKILL_DIR must point to the presentations skill");
@@ -234,10 +234,10 @@ const presentation = Presentation.create({
   });
   text(
     slide,
-    "A fixed-price token sale where every payment settles directly into a 2-of-3 treasury",
+    "A fixed-price token sale where every payment settles directly\ninto a 2-of-3 treasury",
     64,
     312,
-    800,
+    1000,
     116,
     {
       fontSize: 25,
@@ -250,7 +250,7 @@ const presentation = Presentation.create({
     bold: true,
     color: C.amberPale,
   });
-  text(slide, "SafeVendor Group", 64, 594, 420, 28, {
+  text(slide, "SafeVendor Group  /  Group ID: SafeVendor", 64, 594, 520, 28, {
     fontSize: 17,
     bold: true,
     color: C.paper,
@@ -268,7 +268,7 @@ const presentation = Presentation.create({
     color: "#ABB5B0",
   });
   slide.speakerNotes.text =
-    "0:00-0:45. Introduce the project and state the central design claim: sale proceeds never enter a seller-controlled account. Confirm the final formal group ID before submission.";
+    "Presenter: Yang Qingchen. 0:00-0:45. Introduce the group and state the central design claim: sale proceeds never enter a seller-controlled account.";
 }
 
 // 2. Problem
@@ -344,9 +344,9 @@ const presentation = Presentation.create({
     bold: true,
     color: C.teal,
   });
-  footer(slide, 2, "Problem");
+  footer(slide, 2, "Problem / Yang Qingchen");
   slide.speakerNotes.text =
-    "0:45-2:15. Define the users and the custody gap. Explain why a conventional database cannot enforce the later transfer. End on the design requirement: settlement and shared custody must happen in one transaction.";
+    "Presenter: Yang Qingchen. 0:45-2:15. Define the users and the custody gap. Explain why a conventional database cannot enforce the later transfer. End on the design requirement: settlement and shared custody must happen in one transaction.";
 }
 
 // 3. Architecture
@@ -437,9 +437,9 @@ const presentation = Presentation.create({
     30,
     { fontSize: 14, color: C.muted }
   );
-  footer(slide, 3, "Solution design");
+  footer(slide, 3, "Solution design / Xu Fang");
   slide.speakerNotes.text =
-    "2:15-3:30. Walk left to right. The vendor prices and checks the purchase, but the ETH path terminates at Treasury. The buyer receives SVT. Treasury can send funds only after two distinct confirmations.";
+    "Presenter: Xu Fang. 2:15-3:30. Walk left to right. The vendor prices and checks the purchase, but the ETH path terminates at Treasury. The buyer receives SVT. Treasury can send funds only after two distinct confirmations.";
 }
 
 // 4. Purchase flow
@@ -514,9 +514,9 @@ const presentation = Presentation.create({
     30,
     { fontSize: 17, bold: true, color: C.ink }
   );
-  footer(slide, 4, "Purchase flow");
+  footer(slide, 4, "Purchase flow / Xu Fang");
   slide.speakerNotes.text =
-    "3:30-5:00. Explain the four checks and the direct settlement path. Emphasize atomicity: there is no partial success state and no seller custody window.";
+    "Presenter: Xu Fang. 3:30-5:00. Explain the four checks and the direct settlement path. Emphasize atomicity: there is no partial success state and no seller custody window.";
 }
 
 // 5. Treasury flow
@@ -569,7 +569,7 @@ const presentation = Presentation.create({
   const sequence = [
     { n: "1", title: "Submit", body: "Records first confirmation", y: 262 },
     { n: "2", title: "Confirm", body: "A different owner adds the threshold vote", y: 374 },
-    { n: "3", title: "Execute", body: "Any owner calls; executed is set before the external call", y: 486 }
+    { n: "3", title: "Execute", body: "Any owner calls. The contract sets executed before the external call.", y: 486 }
   ];
   for (const item of sequence) {
     const num = slide.shapes.add({
@@ -612,9 +612,9 @@ const presentation = Presentation.create({
     34,
     { fontSize: 14, color: C.muted }
   );
-  footer(slide, 5, "Treasury flow");
+  footer(slide, 5, "Treasury flow / Wang Zijian");
   slide.speakerNotes.text =
-    "5:00-6:30. Explain the submit, confirm, execute sequence. Submission is the first vote. A second distinct owner is required. Mention key loss and collusion assumptions.";
+    "Presenter: Wang Zijian. 5:00-6:30. Explain the submit, confirm, execute sequence. Submission is the first vote. A second distinct owner is required. Mention key loss and collusion assumptions.";
 }
 
 // 6. Security
@@ -654,9 +654,9 @@ const presentation = Presentation.create({
     30,
     { fontSize: 14, color: C.muted }
   );
-  footer(slide, 6, "Security");
+  footer(slide, 6, "Security / Wang Zijian");
   slide.speakerNotes.text =
-    "6:30-8:00. Focus on the state transition controls, not a generic list of attacks. The two Slither findings are informational and intentional.";
+    "Presenter: Wang Zijian. 6:30-8:00. Focus on the state transition controls, not a generic list of attacks. The two Slither findings are informational and intentional.";
 }
 
 // 7. Evidence metrics
@@ -708,9 +708,9 @@ const presentation = Presentation.create({
     fontSize: 15,
     color: C.muted,
   });
-  footer(slide, 7, "Verification");
+  footer(slide, 7, "Verification / Wu Fei");
   slide.speakerNotes.text =
-    "8:00-9:00. Give the evidence, not a claim. Mention 17 tests, full production line and function coverage, three verified contracts, and the two INFO findings.";
+    "Presenter: Wu Fei. 8:00-9:00. Give the evidence, not a claim. Mention 17 tests, full production line and function coverage, three verified contracts, and the two INFO findings.";
 }
 
 // 8. Deployment
@@ -731,9 +731,9 @@ const presentation = Presentation.create({
     columnWidths: [220, 320, 160],
     values: [
       ["Contract", "Address", "State"],
-      ["SafeVendorToken", "0x0827…82BCb", "Verified"],
-      ["MultiSigTreasury", "0xD3F6…1Bd99", "Verified"],
-      ["TokenVendor", "0xE849…11DC6", "Verified"]
+      ["SafeVendorToken", "0xb2ca…D46E", "Verified"],
+      ["MultiSigTreasury", "0x4270…b4c9", "Verified"],
+      ["TokenVendor", "0x1BE4…5270", "Verified"]
     ]
   });
   styleTable(table, { fontSize: 12.5 });
@@ -784,7 +784,7 @@ const presentation = Presentation.create({
       228,
       "cover"
     );
-    text(slide, "Etherscan: matching bytecode and ABI", 812, 430, 404, 28, {
+    text(slide, "Etherscan: verified source and ABI", 812, 430, 404, 28, {
       fontSize: 12,
       color: C.muted,
     });
@@ -803,9 +803,9 @@ const presentation = Presentation.create({
     84,
     { fontSize: 15, color: C.ink }
   );
-  footer(slide, 8, "Deployment");
+  footer(slide, 8, "Deployment / Wu Fei");
   slide.speakerNotes.text =
-    "9:00-10:00. Show that live deployment and source verification are complete. State the immutable operations choice and its trade-off.";
+    "Presenter: Wu Fei. 9:00-10:00. Show that live deployment and source verification are complete. State the immutable operations choice and its trade-off.";
 }
 
 // 9. Demo screenshot
@@ -856,16 +856,16 @@ const presentation = Presentation.create({
     32,
     { fontSize: 13, color: C.muted }
   );
-  footer(slide, 9, "Deployed state");
+  footer(slide, 9, "Deployed state / Chen Qikai");
   slide.speakerNotes.text =
-    "10:00-11:30. Show the current Sepolia state: full vendor inventory, zero treasury balance, three verified contracts, and the fixed owner set. The buy and treasury actions are available for the live Q&A demonstration.";
+    "Presenter: Chen Qikai. 10:00-11:30. Show the current Sepolia state: full vendor inventory, zero treasury balance, three verified contracts, and the fixed owner set. The buy and treasury actions are available for the live Q&A demonstration.";
 }
 
 // 10. Conclusion
 {
   const slide = presentation.slides.add();
   slide.background.fill = C.ink;
-  text(slide, "CONCLUSION", 64, 55, 260, 24, {
+  text(slide, "CONCLUSION  /  CHEN QIKAI", 64, 55, 360, 24, {
     fontSize: 10,
     bold: true,
     color: C.amberPale,
@@ -935,7 +935,7 @@ const presentation = Presentation.create({
     color: C.amberPale,
   });
   slide.speakerNotes.text =
-    "11:30-12:00. Close on the smaller trust boundary. State the limitations without hiding them, then hand over to Q&A. Keep the Etherscan links ready.";
+    "Presenter: Chen Qikai. 11:30-12:00. Close on the smaller trust boundary. State the limitations without hiding them, then hand over to Q&A. Keep the Etherscan links ready.";
 }
 
 // Export previews.

@@ -277,7 +277,7 @@ describe("SafeVendor", function () {
       ).to.be.revertedWithCustomError(treasury, "TransactionAlreadyExecuted");
     });
 
-    it("rejects a non-zero call to an empty EOA as a no-op transfer", async function () {
+    it("transfers approved ETH to an EOA", async function () {
       const { treasury, deployer, owner2, bob } = await loadFixture(
         deployFixture
       );

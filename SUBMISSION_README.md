@@ -2,9 +2,9 @@
 
 ## Final files
 
-- `report/SafeVendor_Project_Report.docx`
-- `report/SafeVendor_Project_Report.pdf`
-- `slides/SafeVendor_Presentation.pptx`
+- `SafeVendor_Project_Report.docx`
+- `SafeVendor_Project_Report.pdf`
+- `SafeVendor_Presentation.pptx`
 - `SafeVendor_Source.zip`
 
 This package contains the final SafeVendor project version deployed from the
@@ -14,22 +14,26 @@ project owner's MetaMask account on Ethereum Sepolia.
 
 https://github.com/aurora371624-star/safevendor
 
+Group: SafeVendor Group  
+Group ID: SafeVendor
+
 ## Verified contracts
 
 | Contract | Sepolia address |
 |---|---|
-| SafeVendorToken | `0x08271e00B298A44476f0b1e71d7A8Dfade182BCb` |
-| MultiSigTreasury | `0xD3F60906B1A52A9dd18ec9e8d212D38f3361Bd99` |
-| TokenVendor | `0xE8499D41C7300D95832359b67e9af261d5D11DC6` |
+| SafeVendorToken | `0xb2caA86b7b758800C09923716213719C456FD46E` |
+| MultiSigTreasury | `0x427038b1e08c3C582C6096233285bd7b26fab4c9` |
+| TokenVendor | `0x1BE452F65B35E3aa8ecD41BbCD7d7C9324705270` |
 
-All three contracts have Etherscan source verification with an Exact Match.
+All three contracts have Etherscan-verified source and ABI. The Treasury uses
+Etherscan's similar-bytecode source match.
 
 ## Treasury configuration
 
 | Owner | Address |
 |---|---|
 | Owner 1 | `0x758090f1c15a76fFf31C5852e71f68ABCF24FA61` |
-| Owner 2 | `0xAD8C645384858B50b988BFEbb0c1DB6f996C5A76` |
+| Owner 2 | `0xbaA884A7B6cAe7d8CEC920a5Ce92e47B6B231031` |
 | Owner 3 | `0x8fcFd31be53b4b2F8C9394d49f92dE56Da2b75c2` |
 
 Threshold: 2 of 3.
@@ -42,11 +46,16 @@ Threshold: 2 of 3.
 - Slither: no High or Medium findings.
 - Vendor inventory: 1,000,000 SVT.
 
-## Before Moodle submission
+## Group and presenter map
 
-- Insert the formal group ID in the report and slide cover.
-- Confirm the five presenter assignments.
-- Give the instructor and TA read access to the repository.
+- Group Lead: Yang Qingchen (slides 1-2)
+- Smart Contract Lead: Xu Fang (slides 3-4)
+- Testing and Security Analyst: Wang Zijian (slides 5-6)
+- Deployment and DevOps Engineer: Wu Fei (slides 7-8)
+- Frontend and Documentation Engineer: Chen Qikai (slides 9-10)
+
+The public repository gives the instructor and TA read access. Submit the report
+and presentation as separate Moodle deliverables.
 
 Owner 3 does not need Sepolia ETH to remain an owner, but needs test ETH to
 confirm or execute a treasury transaction.

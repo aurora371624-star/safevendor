@@ -1,31 +1,31 @@
 {
   "network": "sepolia",
   "chainId": "11155111",
-  "deployedAt": "2026-11-11T15:47:47.900Z",
+  "deployedAt": "2026-11-14T10:22:36.760Z",
   "deployer": "0x758090f1c15a76fFf31C5852e71f68ABCF24FA61",
   "token": {
-    "address": "0x08271e00B298A44476f0b1e71d7A8Dfade182BCb",
-    "deploymentHash": "0xbe942184e1d8ce104a4387febd5e525dba7b9029a602ecd6630a18d78af8f718",
-    "deploymentBlock": 12112697
+    "address": "0xb2caA86b7b758800C09923716213719C456FD46E",
+    "deploymentHash": "0x473a9b7441b61b8da19af84b16d6bd1ac5aed13f08716d331ddb56796b2b53dc",
+    "deploymentBlock": 12132474
   },
   "treasury": {
-    "address": "0xD3F60906B1A52A9dd18ec9e8d212D38f3361Bd99",
+    "address": "0x427038b1e08c3C582C6096233285bd7b26fab4c9",
     "owners": [
       "0x758090f1c15a76fFf31C5852e71f68ABCF24FA61",
-      "0xAD8C645384858B50b988BFEbb0c1DB6f996C5A76",
+      "0xbaA884A7B6cAe7d8CEC920a5Ce92e47B6B231031",
       "0x8fcFd31be53b4b2F8C9394d49f92dE56Da2b75c2"
     ],
     "threshold": 2,
-    "deploymentHash": "0xa5d416397040e8ab7722d359b3b50650e237736d7a03bd190a98db5d8c18dff5",
-    "deploymentBlock": 12112699
+    "deploymentHash": "0xa0e81226b1b899582a568f9b77f5995a24d6d41213df54405b6574c9c8470774",
+    "deploymentBlock": 12132476
   },
   "vendor": {
-    "address": "0xE8499D41C7300D95832359b67e9af261d5D11DC6",
+    "address": "0x1BE452F65B35E3aa8ecD41BbCD7d7C9324705270",
     "pricePerToken": "100000000000000",
-    "tokenAddress": "0x08271e00B298A44476f0b1e71d7A8Dfade182BCb",
-    "treasuryAddress": "0xD3F60906B1A52A9dd18ec9e8d212D38f3361Bd99",
-    "deploymentHash": "0xaf20439f1f628e419e1ca8b93b10ef4c5e2418f39fffe50a8d2dd0be5b05da12",
-    "deploymentBlock": 12112700,
-    "inventoryFundingHash": "0x346e3319c504292119024496f69b94c94fc6bb038a942add248076bdc887d1ba"
+    "tokenAddress": "0xb2caA86b7b758800C09923716213719C456FD46E",
+    "treasuryAddress": "0x427038b1e08c3C582C6096233285bd7b26fab4c9",
+    "deploymentHash": "0x1d02dd7bb4c18c7f5afb08e50533729e77f8c67f897905e30e1ed24c72620818",
+    "deploymentBlock": 12132477,
+    "inventoryFundingHash": "0xe786a2957e974547da69db357a322f9e212286f3a782517f9f0df5250090341b"
   }
 }

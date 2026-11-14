@@ -22,9 +22,9 @@ FRONTEND_SHOT = ROOT / "docs" / "evidence" / "frontend-desktop.png"
 FRONTEND_REPORT_SHOT = WORK / "frontend-report.png"
 ETHERSCAN_SHOT = ROOT / "docs" / "evidence" / "etherscan-treasury-verified.png"
 
-TOKEN_ADDRESS = "0x08271e00B298A44476f0b1e71d7A8Dfade182BCb"
-TREASURY_ADDRESS = "0xD3F60906B1A52A9dd18ec9e8d212D38f3361Bd99"
-VENDOR_ADDRESS = "0xE8499D41C7300D95832359b67e9af261d5D11DC6"
+TOKEN_ADDRESS = "0xb2caA86b7b758800C09923716213719C456FD46E"
+TREASURY_ADDRESS = "0x427038b1e08c3C582C6096233285bd7b26fab4c9"
+VENDOR_ADDRESS = "0x1BE452F65B35E3aa8ecD41BbCD7d7C9324705270"
 
 INK = RGBColor(17, 31, 26)
 MUTED = RGBColor(79, 92, 86)
@@ -170,6 +170,24 @@ def add_bullets(doc, items):
         paragraph.paragraph_format.left_indent = Inches(0.25)
         paragraph.paragraph_format.space_after = Pt(3)
         paragraph.add_run(item)
+
+
+def add_code_block(doc, lines):
+    paragraph = doc.add_paragraph()
+    paragraph.paragraph_format.left_indent = Inches(0.28)
+    paragraph.paragraph_format.right_indent = Inches(0.2)
+    paragraph.paragraph_format.space_before = Pt(4)
+    paragraph.paragraph_format.space_after = Pt(7)
+    paragraph.paragraph_format.line_spacing = 1.0
+    for index, line in enumerate(lines):
+        run = paragraph.add_run(line)
+        run.font.name = "Courier New"
+        run._element.rPr.rFonts.set(qn("w:ascii"), "Courier New")
+        run._element.rPr.rFonts.set(qn("w:hAnsi"), "Courier New")
+        run.font.size = Pt(8.2)
+        run.font.color.rgb = INK
+        if index < len(lines) - 1:
+            run.add_break()
 
 
 def add_metric_row(doc, metrics):
@@ -366,7 +384,7 @@ def add_cover(doc):
 
     metadata = [
         ("Course", "CDS528 Blockchain DeFi Smart Contract Development"),
-        ("Group", "SafeVendor Group"),
+        ("Group", "SafeVendor Group (ID: SafeVendor)"),
         ("Members", "Yang Qingchen, Xu Fang, Wang Zijian, Wu Fei, Chen Qikai"),
         ("Network", "Ethereum Sepolia, chain ID 11155111"),
         ("Submission", "18 November 2026"),
@@ -426,7 +444,8 @@ def add_section_1(doc):
             "The 2-of-3 threshold is enforced by code rather than by an off-chain policy.",
             "Token supply, price, owners, and threshold are publicly inspectable and "
             "cannot be silently changed after deployment.",
-            "Buyers can verify the deployed bytecode and contract state on Etherscan.",
+            "Buyers can verify the deployed bytecode and contract state on Etherscan "
+            "(Etherscan, 2026).",
         ],
     )
 
@@ -513,9 +532,10 @@ def add_section_2(doc):
     doc.add_heading("2.2 Mechanism and token rationale", level=2)
     doc.add_paragraph(
         "ERC-20 is appropriate because the sale needs a fungible unit that any wallet "
-        "can hold and transfer. SafeVendorToken uses OpenZeppelin ERC20 and mints the "
+        "can hold and transfer (Ethereum Foundation, 2026). SafeVendorToken uses "
+        "OpenZeppelin ERC20 and mints the "
         "entire one-million-token supply once. It deliberately omits owner-only mint "
-        "and burn functions, preventing post-sale supply dilution."
+        "and burn functions, preventing post-sale supply dilution (OpenZeppelin, 2026)."
     )
     doc.add_paragraph(
         "The vendor stores the token address, treasury address, and price as immutable "
@@ -639,7 +659,8 @@ def add_section_3(doc):
         "The dApp displays live Sepolia state, quotes a purchase, collects wallet "
         "signatures, submits treasury proposals, and exposes owner confirm and execute "
         "actions. It reads deployment metadata from a generated JSON file, so the "
-        "interface cannot silently point at a different contract set."
+        "interface cannot silently point at a different contract set. The interface uses "
+        "Vite and ethers.js (Ethers, 2026; Vite, 2026)."
     )
     if FRONTEND_SHOT.exists():
         make_frontend_crop(FRONTEND_SHOT, FRONTEND_REPORT_SHOT)
@@ -670,10 +691,32 @@ def add_section_4(doc):
 
     doc.add_heading("4.2 Static analysis", level=2)
     doc.add_paragraph(
-        "Slither analyzed 18 compiled contracts with 100 detectors after excluding "
+        "Slither (Trail of Bits, 2026) analyzed 18 compiled contracts with 100 detectors "
+        "after excluding "
         "OpenZeppelin dependencies and the test-only receiver. It reported no High or "
         "Medium severity findings. The two project-level findings are informational "
         "low-level call findings."
+    )
+    doc.add_paragraph(
+        "The scan was executed from the repository root with the following command. "
+        "The relevant output is reproduced below the command."
+    )
+    add_code_block(
+        doc,
+        [
+            'PYTHONPATH=work/slither-packages python -m slither . \\',
+            '  --filter-paths "contracts/test" \\',
+            "  --exclude-dependencies",
+        ],
+    )
+    add_code_block(
+        doc,
+        [
+            "INFO:Detectors:",
+            "Low level call in MultiSigTreasury.executeTransaction(uint256)",
+            "Low level call in TokenVendor.buyTokens(uint256)",
+            "INFO:Slither:. analyzed (18 contracts with 100 detectors), 2 result(s) found",
+        ],
     )
     add_table(
         doc,
@@ -747,7 +790,11 @@ def add_section_4(doc):
     )
     if ETHERSCAN_SHOT.exists():
         doc.add_picture(str(ETHERSCAN_SHOT), width=Inches(6.2))
-        add_caption(doc, "Figure 3. Etherscan reports matching bytecode and ABI for the treasury.")
+        add_caption(
+            doc,
+            "Figure 3. Etherscan reports verified source, ABI, and compiler "
+            "settings for SafeVendorToken.",
+        )
 
 
 def add_section_5(doc):
@@ -755,9 +802,9 @@ def add_section_5(doc):
     doc.add_heading("5. Deployment and DevOps", level=1)
     doc.add_heading("5.1 Live Sepolia deployment", level=2)
     doc.add_paragraph(
-        "The contracts are deployed on Sepolia and verified on Etherscan with Solidity "
-        "0.8.24, optimizer enabled, and 200 runs. Constructor arguments match the live "
-        "deployment and the source is available through Standard JSON verification."
+        "The contracts are deployed on Sepolia with Solidity 0.8.24, optimizer enabled, "
+        "and 200 runs. Etherscan matches the deployed bytecode to verified source and "
+        "ABI; the Treasury page uses Etherscan's similar-bytecode source match."
     )
     table = doc.add_table(rows=1, cols=2)
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -783,7 +830,8 @@ def add_section_5(doc):
 
     doc.add_heading("5.2 Reproducible deployment", level=2)
     doc.add_paragraph(
-        "pnpm deploy validates chain ID 11155111, deploys Token, Treasury, and Vendor "
+        "The Hardhat deployment scripts (Nomic Foundation, 2026) validate chain ID "
+        "11155111, deploy Token, Treasury, and Vendor "
         "in dependency order, transfers the full inventory, and writes addresses, "
         "transaction hashes, and constructor data to deployments/sepolia.json. The "
         "frontend imports the generated deployment file so UI state and on-chain "
@@ -825,11 +873,15 @@ def add_section_5(doc):
         ["Event", "Observed result"],
         [
             ("Owner 1", "0x758090f1c15a76fFf31C5852e71f68ABCF24FA61"),
-            ("Owner 2", "0xAD8C645384858B50b988BFEbb0c1DB6f996C5A76"),
+            ("Owner 2", "0xbaA884A7B6cAe7d8CEC920a5Ce92e47B6B231031"),
             ("Owner 3", "0x8fcFd31be53b4b2F8C9394d49f92dE56Da2b75c2"),
             ("Threshold", "2 of 3 confirmations required."),
             ("Vendor inventory", "1,000,000 SVT received at deployment."),
-            ("Source verification", "All three contracts match Etherscan Standard JSON input."),
+            (
+                "Source verification",
+                "All three contracts show verified source and ABI on Etherscan; "
+                "the Treasury is a similar-bytecode match.",
+            ),
         ],
         [1.8, 4.7],
         font_size=9.5,
@@ -847,8 +899,7 @@ def add_section_6(doc):
     )
     doc.add_paragraph(
         "The public GitHub URL is on the cover and at the top of the repository README. "
-        "The cover lists the five group members. The final group ID must be confirmed "
-        "before Moodle submission."
+        "The cover identifies the group name, group ID, and all five members."
     )
 
     doc.add_heading("6.2 Rubric coverage", level=2)
@@ -884,12 +935,12 @@ def add_section_6(doc):
             (
                 "R6 Documentation",
                 "README, report, citations, license, AI disclosure.",
-                "Medium until group metadata and presenter names are inserted.",
+                "Low",
             ),
             (
                 "R7 Presentation",
-                "Editable slide deck, 12-minute flow, five speaker roles, Q&A preparation.",
-                "Medium until presenter assignments are confirmed and rehearsed.",
+                "Editable slide deck, 12-minute timing, five named speaker roles, Q&A preparation.",
+                "Low",
             ),
         ],
         [1.65, 3.7, 1.15],
@@ -900,12 +951,17 @@ def add_section_6(doc):
     add_bullets(
         doc,
         [
-            "Project lead: scope, rubric mapping, submission, and timeline control.",
-            "Smart contract lead: contract design, deployment, verification, and gas review.",
-            "Testing and security analyst: failure-path tests, Slither, assumptions, and Q&A.",
-            "Frontend and integration engineer: Vite + ethers.js workflow in the dApp, "
-            "wallet flows, and live demonstration.",
-            "All members participate in final rehearsal and answer at least one question.",
+            "Yang Qingchen, Group Lead: scope, architecture review, submission control, "
+            "and slides 1-2.",
+            "Xu Fang, Smart Contract Lead: contract design, purchase flow, code review, "
+            "and slides 3-4.",
+            "Wang Zijian, Testing and Security Analyst: treasury flow, failure paths, "
+            "Slither evidence, and slides 5-6.",
+            "Wu Fei, Deployment and DevOps Engineer: verification, deployment, Etherscan "
+            "evidence, and slides 7-8.",
+            "Chen Qikai, Frontend and Documentation Engineer: dApp workflow, deployed "
+            "state, conclusion, and slides 9-10.",
+            "Each member presents a two-slide segment and answers at least one question.",
         ],
     )
 
@@ -916,6 +972,33 @@ def add_section_6(doc):
         "proposal cancellation, richer event indexing, fuzz invariants, and a formal "
         "threat model for market pricing. Those additions would introduce new trust "
         "surfaces and should not be added without matching tests and governance rationale."
+    )
+
+    doc.add_heading("6.5 Academic integrity and licensing", level=2)
+    doc.add_paragraph(
+        "AI-assisted tools were used for implementation drafts, test ideation, report "
+        "editing, and presentation drafting. The group reviewed the generated material, "
+        "ran the tests, inspected the deployment evidence, and checked the licenses before "
+        "submission. AI output was not treated as evidence of technical correctness."
+    )
+    doc.add_paragraph(
+        "The project-authored source and documentation use the MIT License. Third-party "
+        "software retains its upstream license. The table records the principal software "
+        "used in the delivered system."
+    )
+    add_table(
+        doc,
+        ["Component", "Delivered version", "License"],
+        [
+            ("OpenZeppelin Contracts", "5.4.0", "MIT"),
+            ("Hardhat", "2.26.3", "MIT"),
+            ("ethers.js", "6.15.0", "MIT"),
+            ("Vite", "7.1.7", "MIT"),
+            ("Lucide", "0.468.0", "ISC"),
+            ("Slither", "0.11.3", "AGPL-2.0"),
+        ],
+        [2.7, 2.05, 1.75],
+        font_size=9.2,
     )
 
 
@@ -935,8 +1018,8 @@ def add_section_7(doc):
         "all three contracts."
     )
     doc.add_paragraph(
-        "The public repository is attached on the cover. The remaining administrative "
-        "step is to insert the final formal group ID before Moodle submission."
+        "The report and presentation include the group identity and a complete speaker "
+        "map. The remaining work is the timed rehearsal and the two Moodle submissions."
     )
 
     doc.add_heading("References", level=1)
@@ -946,6 +1029,7 @@ def add_section_7(doc):
         "Ethereum Foundation. (2026). ERC-20 token standard. "
         "https://ethereum.org/developers/docs/standards/tokens/erc-20/",
         "Etherscan. (2026). Ethereum Sepolia block explorer. https://sepolia.etherscan.io/",
+        "Ethers. (2026). ethers.js documentation. https://docs.ethers.org/",
         "Nomic Foundation. (2026). Hardhat documentation. https://hardhat.org/docs",
         "OpenZeppelin. (2026). OpenZeppelin Contracts 5.x. "
         "https://docs.openzeppelin.com/contracts/5.x/",
@@ -953,6 +1037,7 @@ def add_section_7(doc):
         "https://docs.soliditylang.org/en/v0.8.24/",
         "Trail of Bits. (2026). Slither static analysis. "
         "https://github.com/crytic/slither",
+        "Vite. (2026). Vite documentation. https://vite.dev/",
     ]
     for reference in references:
         paragraph = doc.add_paragraph()
@@ -974,17 +1059,17 @@ def add_section_7(doc):
         (
             "SafeVendorToken",
             TOKEN_ADDRESS,
-            "0xbe942184e1d8ce104a4387febd5e525dba7b9029a602ecd6630a18d78af8f718",
+            "0x473a9b7441b61b8da19af84b16d6bd1ac5aed13f08716d331ddb56796b2b53dc",
         ),
         (
             "MultiSigTreasury",
             TREASURY_ADDRESS,
-            "0xa5d416397040e8ab7722d359b3b50650e237736d7a03bd190a98db5d8c18dff5",
+            "0xa0e81226b1b899582a568f9b77f5995a24d6d41213df54405b6574c9c8470774",
         ),
         (
             "TokenVendor",
             VENDOR_ADDRESS,
-            "0xaf20439f1f628e419e1ca8b93b10ef4c5e2418f39fffe50a8d2dd0be5b05da12",
+            "0x1d02dd7bb4c18c7f5afb08e50533729e77f8c67f897905e30e1ed24c72620818",
         ),
     ]
     for name, address, tx_hash in records:

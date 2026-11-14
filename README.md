@@ -14,9 +14,9 @@ Network: [Sepolia](https://sepolia.etherscan.io) (`chainId: 11155111`)
 
 | Contract | Address | Verification |
 |---|---|---|
-| SafeVendorToken | [`0x08271e00B298A44476f0b1e71d7A8Dfade182BCb`](https://sepolia.etherscan.io/address/0x08271e00B298A44476f0b1e71d7A8Dfade182BCb#code) | Verified |
-| MultiSigTreasury | [`0xD3F60906B1A52A9dd18ec9e8d212D38f3361Bd99`](https://sepolia.etherscan.io/address/0xD3F60906B1A52A9dd18ec9e8d212D38f3361Bd99#code) | Verified |
-| TokenVendor | [`0xE8499D41C7300D95832359b67e9af261d5D11DC6`](https://sepolia.etherscan.io/address/0xE8499D41C7300D95832359b67e9af261d5D11DC6#code) | Verified |
+| SafeVendorToken | [`0xb2caA86b7b758800C09923716213719C456FD46E`](https://sepolia.etherscan.io/address/0xb2caA86b7b758800C09923716213719C456FD46E#code) | Verified |
+| MultiSigTreasury | [`0x427038b1e08c3C582C6096233285bd7b26fab4c9`](https://sepolia.etherscan.io/address/0x427038b1e08c3C582C6096233285bd7b26fab4c9#code) | Verified |
+| TokenVendor | [`0x1BE452F65B35E3aa8ecD41BbCD7d7C9324705270`](https://sepolia.etherscan.io/address/0x1BE452F65B35E3aa8ecD41BbCD7d7C9324705270#code) | Verified |
 
 Deployment evidence is stored in
 [`deployments/sepolia.json`](deployments/sepolia.json).
@@ -26,17 +26,17 @@ The treasury uses these fixed owners and a threshold of two:
 | Owner | Address |
 |---|---|
 | Owner 1 | `0x758090f1c15a76fFf31C5852e71f68ABCF24FA61` |
-| Owner 2 | `0xAD8C645384858B50b988BFEbb0c1DB6f996C5A76` |
+| Owner 2 | `0xbaA884A7B6cAe7d8CEC920a5Ce92e47B6B231031` |
 | Owner 3 | `0x8fcFd31be53b4b2F8C9394d49f92dE56Da2b75c2` |
 
 ### Live transaction evidence
 
 | Action | Transaction |
 |---|---|
-| Deploy SVT | [`0xbe942184...f718`](https://sepolia.etherscan.io/tx/0xbe942184e1d8ce104a4387febd5e525dba7b9029a602ecd6630a18d78af8f718) |
-| Deploy Treasury | [`0xa5d41639...dff5`](https://sepolia.etherscan.io/tx/0xa5d416397040e8ab7722d359b3b50650e237736d7a03bd190a98db5d8c18dff5) |
-| Deploy Vendor | [`0xaf20439f...da12`](https://sepolia.etherscan.io/tx/0xaf20439f1f628e419e1ca8b93b10ef4c5e2418f39fffe50a8d2dd0be5b05da12) |
-| Fund 1,000,000 SVT inventory | [`0x346e3319...d1ba`](https://sepolia.etherscan.io/tx/0x346e3319c504292119024496f69b94c94fc6bb038a942add248076bdc887d1ba) |
+| Deploy SVT | [`0x473a9b74...b53dc`](https://sepolia.etherscan.io/tx/0x473a9b7441b61b8da19af84b16d6bd1ac5aed13f08716d331ddb56796b2b53dc) |
+| Deploy Treasury | [`0xa0e81226...0774`](https://sepolia.etherscan.io/tx/0xa0e81226b1b899582a568f9b77f5995a24d6d41213df54405b6574c9c8470774) |
+| Deploy Vendor | [`0x1d02dd7b...0818`](https://sepolia.etherscan.io/tx/0x1d02dd7bb4c18c7f5afb08e50533729e77f8c67f897905e30e1ed24c72620818) |
+| Fund 1,000,000 SVT inventory | [`0xe786a295...341b`](https://sepolia.etherscan.io/tx/0xe786a2957e974547da69db357a322f9e212286f3a782517f9f0df5250090341b) |
 
 The current deployment configures the deployer as Owner 1. Owner 2 and Owner 3
 are independent treasury addresses. The vendor holds the full 1,000,000 SVT
@@ -230,10 +230,20 @@ Solidity, and Etherscan are cited in the report and in
 ## AI-assisted work disclosure
 
 The project used AI assistance for implementation drafts, test ideation,
-documentation structure, and presentation drafting. The group must review all
+documentation structure, and presentation drafting. The group reviewed the
 generated content for correctness, runtime behavior, citation accuracy, and
 license compatibility before submission. AI output is not treated as an
 authority or as evidence of correctness.
+
+## Group and presenter map
+
+| Member | Role | Presentation segment |
+|---|---|---|
+| Yang Qingchen | Group Lead | Slides 1-2 |
+| Xu Fang | Smart Contract Lead | Slides 3-4 |
+| Wang Zijian | Testing and Security Analyst | Slides 5-6 |
+| Wu Fei | Deployment and DevOps Engineer | Slides 7-8 |
+| Chen Qikai | Frontend and Documentation Engineer | Slides 9-10 |
 
 ## License
 
