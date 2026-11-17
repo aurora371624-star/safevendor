@@ -39,8 +39,7 @@ The treasury uses these fixed owners and a threshold of two:
 | Fund 1,000,000 SVT inventory | [`0xe786a295...341b`](https://sepolia.etherscan.io/tx/0xe786a2957e974547da69db357a322f9e212286f3a782517f9f0df5250090341b) |
 
 The current deployment configures the deployer as Owner 1. Owner 2 and Owner 3
-are independent treasury addresses. The vendor holds the full 1,000,000 SVT
-inventory.
+are independent treasury addresses. The vendor holds 999,600 remaining SVT from the initial 1,000,000 inventory after four demo purchases.
 
 ## Architecture
 
@@ -121,7 +120,7 @@ pnpm frontend:build
 The current verification run produced:
 
 - 17 passing tests
-- 100% statement, function, and line coverage for production contracts
+- 97.73% production statement coverage for production contracts
 - 79.03% aggregate branch coverage
 - Slither: no High or Medium findings; two intentional low-level `call` INFO
   findings
