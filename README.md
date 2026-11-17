@@ -120,7 +120,7 @@ pnpm frontend:build
 The current verification run produced:
 
 - 17 passing tests
-- 97.73% production statement coverage for production contracts
+- 97.73% production statement coverage
 - 79.03% aggregate branch coverage
 - Slither: no High or Medium findings; two intentional low-level `call` INFO
   findings
