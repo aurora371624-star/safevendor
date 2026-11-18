@@ -1,6 +1,10 @@
 # SafeVendor
 
-**Repository:** https://github.com/aurora371624-star/safevendor
+- **Repository:** https://github.com/aurora371624-star/safevendor
+- **Demo video:** https://drive.google.com/file/d/19GgqYu6rX3RfzK1NjU8hw7JJyKef4S2P/view?usp=sharing
+
+Group: SafeVendor Group  
+Group ID: chocolate
 
 SafeVendor is a fixed-price ERC-20 sale that sends every sale payment directly
 to a 2-of-3 multisig treasury. A single treasury owner cannot move user funds.
@@ -94,7 +98,6 @@ deployments/         generated Sepolia address and transaction evidence
 docs/                architecture, security, requirements, and demo material
 report/              final report source and exported files
 slides/              final presentation and rendering checks
-outputs/             submission-ready copies for the user
 ```
 
 ## Setup
@@ -120,8 +123,9 @@ pnpm frontend:build
 The current verification run produced:
 
 - 17 passing tests
-- 97.73% production statement coverage
-- 79.03% aggregate branch coverage
+- 97.73% production-contract statement coverage
+- 100% production-contract function and line coverage
+- 80.0% production-contract aggregate branch coverage (79.03% across all files)
 - Slither: no High or Medium findings; two intentional low-level `call` INFO
   findings
 
@@ -217,7 +221,7 @@ place; a new deployment is required. The project is designed for Sepolia only.
 
 The rubric-by-rubric evidence map is in
 [`docs/REQUIREMENTS.md`](docs/REQUIREMENTS.md). It covers R1 through R7,
-deliverables D1-D3, academic integrity, and submission logistics.
+deliverables D1 through D4, academic integrity, and submission logistics.
 
 ## External code and references
 
@@ -234,15 +238,15 @@ generated content for correctness, runtime behavior, citation accuracy, and
 license compatibility before submission. AI output is not treated as an
 authority or as evidence of correctness.
 
-## Group and presenter map
+## Project team and responsibilities
 
-| Member | Role | Presentation segment |
+| Member | Role | Responsibilities |
 |---|---|---|
-| Yang Qingchen | Group Lead | Slides 1-2 |
-| Xu Fang | Smart Contract Lead | Slides 3-4 |
-| Wang Zijian | Testing and Security Analyst | Slides 5-6 |
-| Wu Fei | Deployment and DevOps Engineer | Slides 7-8 |
-| Chen Qikai | Frontend and Documentation Engineer | Slides 9-10 |
+| Yang Qingchen | Project lead | Scope, requirements matrix, repository hygiene, Deploy and verify scripts, environment, repository documentation. |
+| Xu Fang | Smart contracts | The three contracts, deployment, Etherscan verification, gas profiling. |
+| Wang Zijian | Testing and security | Test suite, coverage, Slither, threat model. |
+| Wu Fei | Front end and demo | The dApp, wallet flows, the two-minute live demonstration. |
+| Chen Qikai | Integration | Integration checks, deployment/CI verification and repository review. |
 
 ## License
 
