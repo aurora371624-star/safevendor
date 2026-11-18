@@ -1,23 +1,33 @@
 # SafeVendor Submission
 
-## Final files
+Course: CDS528 Blockchain - DeFi Smart Contract Development
 
-- `SafeVendor_Project_Report.docx`
-- `SafeVendor_Project_Report.pdf`
-- `SafeVendor_Presentation.pptx`
-- `SafeVendor_Source.zip`
+Group: SafeVendor Group
 
-This package contains the final SafeVendor project version deployed from the
-project owner's MetaMask account on Ethereum Sepolia.
+Group ID: chocolate
 
-## Repository
+Network: Ethereum Sepolia (`chainId: 11155111`)
 
-https://github.com/aurora371624-star/safevendor
+## Required links
 
-Group: SafeVendor Group  
-Group ID: SafeVendor
+- **Repository:** https://github.com/aurora371624-star/safevendor
+- **Demo video:** https://drive.google.com/file/d/19GgqYu6rX3RfzK1NjU8hw7JJyKef4S2P/view?usp=sharing
 
-## Verified contracts
+The repository and Google Drive video are public. The team demo is 3 minutes and
+54 seconds long and
+shows the live dApp, purchase mechanics, treasury operations, verified contract
+source, purchase transaction evidence, tests, and security results.
+
+## Deliverable map
+
+| Deliverable | Prepared output | Status |
+|---|---|---|
+| D1 Project report | Existing report supplied separately by the group | Do not regenerate |
+| D2 Public source repository | GitHub repository linked above | Complete |
+| D3 Demo video | Google Drive link above | Provided; 3 minutes 54 seconds, slightly shorter than the approximate 5-minute target |
+| D4 Presentation slides | Existing presentation supplied separately by the group | Do not regenerate |
+
+## Live deployment
 
 | Contract | Sepolia address |
 |---|---|
@@ -25,8 +35,7 @@ Group ID: SafeVendor
 | MultiSigTreasury | `0x427038b1e08c3C582C6096233285bd7b26fab4c9` |
 | TokenVendor | `0x1BE452F65B35E3aa8ecD41BbCD7d7C9324705270` |
 
-All three contracts have Etherscan-verified source and ABI. The Treasury uses
-Etherscan's similar-bytecode source match.
+All three address links resolve to verified contracts on Sepolia Etherscan.
 
 ## Treasury configuration
 
@@ -38,24 +47,43 @@ Etherscan's similar-bytecode source match.
 
 Threshold: 2 of 3.
 
-## Recorded verification
+## Current recorded state
 
 - 17 Hardhat tests passing.
-- 100% production statement, function, and line coverage.
-- Aggregate branch coverage: 79.03%.
-- Slither: no High or Medium findings.
-- Vendor inventory: 1,000,000 SVT.
+- 97.73% production-contract statement coverage.
+- 100% function and line coverage for the production contracts.
+- 79.03% aggregate branch coverage.
+- Slither reports no High or Medium findings.
+- The treasury balance is 0.019 ETH.
+- The vendor holds 999,600 SVT after four recorded demo purchases.
+- Three treasury proposals have executed.
 
-## Group and presenter map
+## Reproduce
 
-- Group Lead: Yang Qingchen (slides 1-2)
-- Smart Contract Lead: Xu Fang (slides 3-4)
-- Testing and Security Analyst: Wang Zijian (slides 5-6)
-- Deployment and DevOps Engineer: Wu Fei (slides 7-8)
-- Frontend and Documentation Engineer: Chen Qikai (slides 9-10)
+```bash
+corepack enable
+pnpm install
+pnpm compile
+pnpm test
+pnpm coverage
+pnpm lint:sol
+pnpm frontend:build
+pnpm frontend:dev
+```
 
-The public repository gives the instructor and TA read access. Submit the report
-and presentation as separate Moodle deliverables.
+Environment variables and deployment steps are documented in `README.md`.
+Deployment hashes are stored in `deployments/sepolia.json`.
 
-Owner 3 does not need Sepolia ETH to remain an owner, but needs test ETH to
-confirm or execute a treasury transaction.
+## Moodle handoff
+
+Submit the report and presentation as separate Moodle deliverables. Use these
+URLs in both submission forms and at the top of the final report:
+
+```text
+Repository: https://github.com/aurora371624-star/safevendor
+Demo video: https://drive.google.com/file/d/19GgqYu6rX3RfzK1NjU8hw7JJyKef4S2P/view?usp=sharing
+```
+
+The source archive in this local package excludes the report, slides, installed
+dependencies, build outputs, and Git history because those items are either
+already supplied separately or reproducible from `pnpm-lock.yaml`.
